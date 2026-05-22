@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useCart } from "./CartContext";
 
 const navLinks = [
   { href: "/",          label: "Inicio" },
@@ -14,9 +14,10 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [scrolled,    setScrolled]    = useState(false);
-  const [mobileOpen,  setMobileOpen]  = useState(false);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const { cartCount, openCart } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -29,73 +30,88 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-[#0A0A12]/95 backdrop-blur-md border-b border-white/10"
-            : "bg-transparent"
-        }`}
+        style={{
+          position: "sticky", top: 0, zIndex: 50,
+          backdropFilter: "blur(18px)",
+          background: scrolled ? "rgba(5,0,16,0.8)" : "rgba(5,0,16,0.4)",
+          borderBottom: "1px solid var(--border)",
+          transition: "background .3s ease",
+        }}
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center group">
+          <Link href="/" style={{ display: "flex", alignItems: "center" }}>
             <Image
               src="/logo.png"
               alt="Sournova"
               width={140}
               height={56}
-              className="h-10 w-auto object-contain transition-opacity group-hover:opacity-80"
+              className="h-10 w-auto object-contain"
+              style={{ filter: "drop-shadow(0 0 12px rgba(123,44,255,0.5))" }}
               priority
             />
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+          <nav style={{ display: "flex", gap: 28 }} className="hidden md:flex">
+            {navLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium tracking-wide transition-colors relative ${
-                  pathname === link.href
-                    ? "text-[#BF44FF]"
-                    : "text-[#EDE8FF]/60 hover:text-[#EDE8FF]"
-                }`}
-                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+                style={{
+                  color: pathname === link.href ? "white" : "var(--ink-dim)",
+                  textDecoration: "none", fontSize: 14, fontWeight: 500,
+                  letterSpacing: "0.04em", textTransform: "uppercase",
+                  position: "relative", transition: "color .2s ease",
+                }}
               >
                 {link.label}
                 {pathname === link.href && (
                   <motion.span
                     layoutId="nav-underline"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full"
-                    style={{ background: "linear-gradient(90deg,#BF44FF,#E8196E)" }}
+                    style={{
+                      position: "absolute", left: 0, right: 0, bottom: -8, height: 2,
+                      background: "var(--grad-nova)", borderRadius: 999,
+                    }}
                   />
                 )}
               </Link>
             ))}
           </nav>
 
-          {/* CTA */}
-          <div className="hidden md:flex">
-            <Link
-              href="/productos"
-              className="px-5 py-2 rounded-xl text-sm font-bold text-[#0A0A12] hover:opacity-90 transition-opacity"
-              style={{
-                fontFamily: '"Plus Jakarta Sans", sans-serif',
-                background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-              }}
-            >
+          {/* Actions */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Link href="/productos" className="btn btn-primary hidden md:inline-flex" style={{ padding: "10px 20px", fontSize: 13 }}>
               Comprar
             </Link>
-          </div>
 
-          {/* Hamburger */}
-          <button
-            className="md:hidden text-[#EDE8FF] p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            <button
+              className="btn-icon"
+              aria-label="Carrito"
+              onClick={openCart}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 3h2l2.5 12h11L21 7H6"/>
+                <circle cx="9" cy="20" r="1.5"/>
+                <circle cx="17" cy="20" r="1.5"/>
+              </svg>
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </button>
+
+            {/* Hamburger */}
+            <button
+              className="md:hidden"
+              style={{ color: "white", padding: 8, background: "none", border: "none", cursor: "pointer" }}
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+            >
+              {mobileOpen
+                ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+              }
+            </button>
+          </div>
         </div>
       </header>
 
@@ -107,13 +123,15 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-[#0A0A12] flex flex-col items-center justify-center gap-10"
+            style={{
+              position: "fixed", inset: 0, zIndex: 40,
+              background: "rgba(5,0,16,0.97)", backdropFilter: "blur(20px)",
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 40,
+            }}
           >
-            {/* Decorative blobs */}
-            <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none"
-              style={{ background: "#7B1DB8" }} />
-            <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full blur-3xl opacity-15 pointer-events-none"
-              style={{ background: "#E8196E" }} />
+            {/* Glow blobs */}
+            <div style={{ position: "absolute", top: "25%", left: "25%", width: 256, height: 256, borderRadius: "50%", background: "#7B1DB8", filter: "blur(80px)", opacity: 0.2, pointerEvents: "none" }} />
+            <div style={{ position: "absolute", bottom: "25%", right: "25%", width: 192, height: 192, borderRadius: "50%", background: "#FF2EA8", filter: "blur(80px)", opacity: 0.15, pointerEvents: "none" }} />
 
             {navLinks.map((link, i) => (
               <motion.div
@@ -124,11 +142,13 @@ export default function Navbar() {
               >
                 <Link
                   href={link.href}
-                  className="text-5xl transition-colors block"
                   style={{
-                    fontFamily: '"Bebas Neue", sans-serif',
-                    letterSpacing: "0.05em",
-                    color: pathname === link.href ? "#BF44FF" : "#EDE8FF",
+                    fontFamily: '"Bagel Fat One", sans-serif',
+                    fontSize: "clamp(3rem, 12vw, 5rem)",
+                    letterSpacing: "0.02em",
+                    color: pathname === link.href ? "var(--magenta)" : "white",
+                    textDecoration: "none",
+                    display: "block",
                   }}
                 >
                   {link.label}
@@ -136,21 +156,9 @@ export default function Navbar() {
               </motion.div>
             ))}
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.35 }}
-            >
-              <Link
-                href="/productos"
-                className="px-8 py-3 rounded-xl text-[#0A0A12] text-xl font-bold"
-                style={{
-                  fontFamily: '"Bebas Neue", sans-serif',
-                  letterSpacing: "0.05em",
-                  background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-                }}
-              >
-                Comprar Ahora
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+              <Link href="/productos" className="btn btn-primary btn-lg">
+                Comprar ahora →
               </Link>
             </motion.div>
           </motion.div>

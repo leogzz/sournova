@@ -1,94 +1,121 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
 import { Producto } from "@/data/productos";
+import { useCart } from "./CartContext";
 
 interface ProductCardProps { producto: Producto; }
 
-const categoryColors: Record<string, string> = {
-  refresco: "#6699FF",
-  gomita:   "#BF44FF",
-  merch:    "#E8196E",
-};
+// Map category → gradient
+function categoryGradient(cat: string, color: string, accent: string): string {
+  if (cat === "refresco") return `linear-gradient(155deg, ${color}cc 0%, ${color} 50%, ${accent}99 100%)`;
+  if (cat === "gomita")   return `linear-gradient(155deg, ${color}cc 0%, ${color} 60%, ${accent} 100%)`;
+  return `linear-gradient(155deg, ${color}99 0%, ${color} 60%, ${accent}66 100%)`;
+}
+
+function tagIsHot(tag: string) {
+  return ["Más vendido", "Fan fav", "Hot", "Bestseller"].includes(tag);
+}
 
 export default function ProductCard({ producto }: ProductCardProps) {
-  const badgeColor = categoryColors[producto.categoria] ?? "#BF44FF";
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { addToCart } = useCart();
+
+  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100) + "%");
+    e.currentTarget.style.setProperty("--my", ((e.clientY - r.top)  / r.height * 100) + "%");
+  }
+
+  const gradient = categoryGradient(producto.categoria, producto.color, producto.accentColor);
+  const hot      = producto.badge ? tagIsHot(producto.badge) : false;
+
+  function handleAdd() {
+    addToCart({
+      id:        producto.id,
+      nombre:    producto.nombre,
+      precio:    producto.precio,
+      categoria: producto.categoria,
+      gradient,
+      emoji:     producto.emoji,
+    });
+  }
 
   return (
-    <motion.div
-      className="group relative flex flex-col rounded-2xl overflow-hidden border border-white/10 cursor-pointer"
-      style={{ backgroundColor: "#130F1E" }}
-      whileHover={{ scale: 1.03, y: -5 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-    >
-      {/* Promo badge */}
-      {producto.badge && (
-        <div
-          className="absolute top-3 right-3 z-10 px-2.5 py-0.5 rounded-full text-[11px] font-bold"
-          style={{
-            background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-            color: "#EDE8FF",
-            fontFamily: '"Plus Jakarta Sans", sans-serif',
-          }}
-        >
-          {producto.badge}
-        </div>
-      )}
+    <div className="product-card-nova" ref={cardRef} onMouseMove={onMove}>
+      {/* Product image area */}
+      <div style={{
+        aspectRatio: "1/1", borderRadius: "var(--radius-md)",
+        background: gradient,
+        marginBottom: 18, display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden",
+      }}>
+        {/* Badge */}
+        {producto.badge && (
+          <div style={{
+            position: "absolute", top: 14, left: 14, zIndex: 2,
+            fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700,
+            padding: "6px 10px", borderRadius: 999,
+            background: hot ? "var(--grad-nova)" : "rgba(0,0,0,0.5)",
+            backdropFilter: hot ? undefined : "blur(8px)",
+            border: hot ? "none" : "1px solid rgba(255,255,255,0.15)",
+            color: hot ? "#050010" : "white",
+          }}>
+            {producto.badge}
+          </div>
+        )}
 
-      {/* Image placeholder */}
-      <div
-        className="relative w-full aspect-square flex flex-col items-center justify-center overflow-hidden"
-        style={{ backgroundColor: producto.color }}
-      >
-        <div
-          className="absolute w-36 h-36 rounded-full opacity-25"
-          style={{ backgroundColor: producto.accentColor }}
-        />
-        <span className="relative z-10 text-7xl select-none" role="img" aria-label={producto.nombre}>
+        {/* Glare overlay */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "var(--radius-md)",
+          background: "radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2) 0%, transparent 60%)",
+          pointerEvents: "none",
+        }} />
+
+        {/* Emoji */}
+        <span style={{ fontSize: "5rem", lineHeight: 1, position: "relative", zIndex: 1, userSelect: "none" }} role="img" aria-label={producto.nombre}>
           {producto.emoji}
         </span>
-        <span
-          className="relative z-10 mt-2 text-xs uppercase tracking-widest opacity-60 px-4 text-center"
-          style={{ color: producto.accentColor, fontFamily: '"Bebas Neue", sans-serif' }}
-        >
-          {producto.nombre}
+        <span style={{
+          position: "relative", zIndex: 1, marginTop: 8,
+          fontFamily: '"Bagel Fat One", sans-serif', fontSize: 12,
+          letterSpacing: "0.15em", textTransform: "uppercase", opacity: 0.7,
+        }}>
+          {producto.tag}
         </span>
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       {/* Card body */}
-      <div className="flex flex-col flex-1 p-4 gap-3">
-        <span className="badge-sticker self-start text-xs" style={{ color: badgeColor, borderColor: badgeColor }}>
-          {producto.tag}
+      <h3 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 24, lineHeight: 1, margin: "0 0 6px" }}>
+        {producto.nombre}
+      </h3>
+      <p style={{ fontSize: 13, color: "var(--ink-dim)", margin: "0 0 16px", minHeight: 36, flex: 1 }}>
+        {producto.descripcion}
+      </p>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+        <span style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 22 }}>
+          ${producto.precio}
+          <small style={{ fontSize: 12, opacity: 0.6, fontFamily: '"Space Grotesk", sans-serif', marginLeft: 4 }}>MXN</small>
         </span>
-        <h3
-          className="text-xl leading-tight text-[#EDE8FF]"
-          style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.03em" }}
+
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={handleAdd}
+          aria-label={`Agregar ${producto.nombre}`}
+          style={{
+            width: 40, height: 40, borderRadius: 999,
+            background: "var(--grad-nova)", color: "#050010",
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            fontSize: 22, fontWeight: 700, cursor: "pointer", border: "none",
+            boxShadow: "0 8px 20px -4px rgba(255,46,168,0.5)",
+            transition: "box-shadow .2s ease",
+          }}
         >
-          {producto.nombre}
-        </h3>
-        <p className="text-sm text-[#EDE8FF]/55 leading-relaxed flex-1" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-          {producto.descripcion}
-        </p>
-        <div className="flex items-center justify-between pt-2 border-t border-white/10">
-          <span style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
-            <span className="text-2xl text-[#BF44FF]">${producto.precio}</span>
-            <span className="text-xs text-[#EDE8FF]/35 ml-1">MXN</span>
-          </span>
-          <motion.button
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold text-[#0A0A12] hover:opacity-90 transition-opacity"
-            style={{
-              background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-              fontFamily: '"Plus Jakarta Sans", sans-serif',
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ShoppingCart size={13} />
-            Agregar
-          </motion.button>
-        </div>
+          +
+        </motion.button>
       </div>
-    </motion.div>
+    </div>
   );
 }

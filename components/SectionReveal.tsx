@@ -1,12 +1,13 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, CSSProperties } from "react";
 
 interface SectionRevealProps {
-  children: ReactNode;
+  children:   ReactNode;
   className?: string;
-  delay?: number;
+  style?:     CSSProperties;
+  delay?:     number;
   direction?: "up" | "down" | "left" | "right";
 }
 
@@ -32,12 +33,14 @@ const variants: Record<string, Variants> = {
 export default function SectionReveal({
   children,
   className = "",
+  style,
   delay = 0,
   direction = "up",
 }: SectionRevealProps) {
   return (
     <motion.div
       className={className}
+      style={style}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-60px" }}

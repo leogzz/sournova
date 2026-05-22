@@ -4,16 +4,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import SectionReveal from "@/components/SectionReveal";
-import MarqueeTicker from "@/components/MarqueeTicker";
 import { productos, Categoria } from "@/data/productos";
 
 type FilterTab = "todos" | Categoria;
 
-const tabs: { id: FilterTab; label: string; color: string }[] = [
-  { id: "todos",    label: "Todos",     color: "#BF44FF" },
-  { id: "refresco", label: "Refrescos", color: "#6699FF" },
-  { id: "gomita",   label: "Gomitas",   color: "#BF44FF" },
-  { id: "merch",    label: "Merch",     color: "#E8196E" },
+const tabs: { id: FilterTab; label: string }[] = [
+  { id: "todos",    label: "Todo"      },
+  { id: "refresco", label: "Refrescos" },
+  { id: "gomita",   label: "Gomitas"   },
+  { id: "merch",    label: "Merch"     },
 ];
 
 export default function ProductosPage() {
@@ -22,112 +21,88 @@ export default function ProductosPage() {
   const filtered =
     activeTab === "todos"
       ? productos
-      : productos.filter((p) => p.categoria === activeTab);
-
-  const activeColor = tabs.find((t) => t.id === activeTab)?.color ?? "#BF44FF";
+      : productos.filter(p => p.categoria === activeTab);
 
   return (
     <>
       {/* ── PAGE HERO ── */}
-      <section className="relative bg-[#0A0A12] pt-32 pb-16 px-4 overflow-hidden">
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ backgroundColor: "#7B1DB8" }}
-        />
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+      <section style={{ position: "relative", paddingTop: 100, paddingBottom: 60, padding: "100px 28px 60px", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 600, height: 300, borderRadius: "50%", background: "rgba(123,44,255,0.3)", filter: "blur(80px)", pointerEvents: "none" }} />
+
+        <div style={{ maxWidth: 1320, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-[#BF44FF]/70 text-sm font-bold tracking-[0.3em] uppercase mb-3"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+            className="eyebrow"
+            style={{ margin: "0 auto 18px" }}
           >
-            Catálogo completo
-          </motion.p>
+            <span className="dot" /> Catálogo completo
+          </motion.div>
+
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-white"
-            style={{
-              fontFamily: '"Bebas Neue", sans-serif',
-              fontSize: "clamp(3.5rem, 10vw, 8rem)",
-              letterSpacing: "0.02em",
-              lineHeight: 1,
-            }}
+            style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(3.5rem, 10vw, 8rem)", lineHeight: 0.95, letterSpacing: "-0.02em", margin: "0 0 16px" }}
           >
             Nuestros{" "}
-            <span className="text-[#BF44FF]">Productos</span>
+            <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Productos
+            </span>
           </motion.h1>
+
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="text-white/50 text-base mt-4 max-w-md mx-auto"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+            style={{ color: "var(--ink-dim)", fontSize: 18, maxWidth: 500, margin: "0 auto" }}
           >
             Refrescos, gomitas y merch que van a hacer que tu vida tenga más sabor. Literalmente.
           </motion.p>
         </div>
       </section>
 
-      {/* ── FILTER TABS ── */}
-      <div className="bg-[#0A0A12] sticky top-16 z-30 border-b border-white/10 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="relative flex-shrink-0 px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
-                style={{
-                  fontFamily: '"Plus Jakarta Sans", sans-serif',
-                  color: activeTab === tab.id ? "#0A0A12" : "rgba(255,255,255,0.5)",
-                  backgroundColor: activeTab === tab.id ? tab.color : "transparent",
-                  border: `2px solid ${activeTab === tab.id ? tab.color : "rgba(255,255,255,0.1)"}`,
-                }}
-              >
-                {activeTab === tab.id && (
-                  <motion.div
-                    layoutId="tab-bg"
-                    className="absolute inset-0 rounded-xl"
-                    style={{ backgroundColor: tab.color }}
-                  />
-                )}
-                <span className="relative z-10">{tab.label}</span>
-              </button>
-            ))}
-
-            {/* Item count */}
-            <span
-              className="ml-auto flex-shrink-0 text-white/30 text-sm"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+      {/* ── STICKY FILTER TABS ── */}
+      <div style={{
+        position: "sticky", top: 72, zIndex: 30,
+        backdropFilter: "blur(18px)",
+        background: "rgba(5,0,16,0.8)",
+        borderBottom: "1px solid var(--border)",
+        padding: "0 28px",
+      }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, padding: "16px 0", overflowX: "auto" }}>
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              className={`cat-pill ${activeTab === tab.id ? "active" : ""}`}
+              onClick={() => setActiveTab(tab.id)}
             >
-              {filtered.length}{" "}
-              {filtered.length === 1 ? "producto" : "productos"}
-            </span>
-          </div>
+              {tab.label}
+            </button>
+          ))}
+          <span style={{ marginLeft: "auto", flexShrink: 0, color: "var(--ink-mute)", fontSize: 14 }}>
+            {filtered.length} {filtered.length === 1 ? "producto" : "productos"}
+          </span>
         </div>
       </div>
 
       {/* ── PRODUCT GRID ── */}
-      <section className="bg-[#0A0A12] py-14 px-4 min-h-[60vh]">
-        <div className="max-w-7xl mx-auto">
+      <section style={{ padding: "48px 28px 80px", minHeight: "60vh" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto" }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 22 }}
+              className="products-grid-responsive"
             >
               {filtered.map((producto, i) => (
                 <motion.div
                   key={producto.id}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
                 >
                   <ProductCard producto={producto} />
                 </motion.div>
@@ -137,54 +112,56 @@ export default function ProductosPage() {
         </div>
       </section>
 
-      {/* ── MARQUEE ── */}
-      <MarqueeTicker
-        bg="#130F1E"
-        textColor={activeColor}
-        items={[
-          "SOURNOVA",
-          "100% ÁCIDO",
-          "COMPRA MÁS",
-          "AGREGA AL CARRITO",
-          "TU BOCA TE LO VA A AGRADECER",
-          "O NO. ÉSE ES EL PUNTO",
-        ]}
-      />
+      {/* ── GRADIENT TICKER ── */}
+      <div className="ticker-grad">
+        <div className="ticker-grad-track">
+          {[0, 1].map(i => (
+            <span key={i}>
+              SOURNOVA <span style={{ color: "white" }}>✦</span>{" "}
+              100% ÁCIDO <span style={{ color: "white" }}>✦</span>{" "}
+              COMPRA MÁS <span style={{ color: "white" }}>✦</span>{" "}
+              TU BOCA TE LO VA A AGRADECER <span style={{ color: "white" }}>✦</span>{" "}
+              O NO. ÉSE ES EL PUNTO <span style={{ color: "white" }}>✦</span>{" "}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ── MAYOREO CALLOUT ── */}
-      <section className="bg-[#130F1E] py-16 px-4">
-        <div className="max-w-3xl mx-auto">
+      <section style={{ padding: "60px 28px" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <SectionReveal>
-            <div className="p-8 rounded-2xl border-2 border-[#BF44FF]/30 bg-[#BF44FF]/5 flex flex-col md:flex-row items-center gap-6">
-              <div className="text-5xl">📦</div>
-              <div className="flex-1 text-center md:text-left">
-                <h3
-                  className="text-3xl text-[#BF44FF] mb-2"
-                  style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.05em" }}
-                >
+            <div style={{
+              padding: 32, borderRadius: 28,
+              border: "1px solid rgba(123,44,255,0.4)",
+              background: "rgba(123,44,255,0.06)",
+              display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap",
+            }}>
+              <div style={{ fontSize: 48 }}>📦</div>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <h3 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 28, margin: "0 0 8px", color: "var(--violet)" }}>
                   ¿Pedidos al por mayor?
                 </h3>
-                <p
-                  className="text-white/60 text-sm leading-relaxed"
-                  style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                >
+                <p style={{ color: "var(--ink-dim)", fontSize: 14, lineHeight: 1.6, margin: 0 }}>
                   Tiendas, eventos, festivales — tenemos precios de mayoreo. Escríbenos y armamos un paquete a tu medida.
                 </p>
               </div>
               <a
                 href="mailto:hola@sournova.mx"
-                className="flex-shrink-0 px-6 py-3 rounded-xl font-bold text-sm text-[#0A0A12] hover:opacity-90 transition-opacity"
-                style={{
-                  fontFamily: '"Plus Jakarta Sans", sans-serif',
-                  background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-                }}
+                className="btn btn-primary"
+                style={{ flexShrink: 0, textDecoration: "none" }}
               >
-                Escribirnos
+                Escribirnos →
               </a>
             </div>
           </SectionReveal>
         </div>
       </section>
+
+      <style>{`
+        @media (max-width: 1100px) { .products-grid-responsive { grid-template-columns: repeat(2, 1fr) !important; } }
+        @media (max-width: 640px)  { .products-grid-responsive { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; } }
+      `}</style>
     </>
   );
 }

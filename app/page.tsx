@@ -1,420 +1,598 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import MarqueeTicker from "@/components/MarqueeTicker";
-import ProductCard from "@/components/ProductCard";
+import HeroVisual from "@/components/HeroVisual";
+import SodaCan from "@/components/SodaCan";
 import SectionReveal from "@/components/SectionReveal";
+import ProductCard from "@/components/ProductCard";
+import { useCart } from "@/components/CartContext";
 import { productos } from "@/data/productos";
+import type { CartProduct } from "@/components/CartContext";
 
-const featured = [
-  productos.find((p) => p.id === "punch-citrico")!,
-  productos.find((p) => p.id === "gusanos-acidos")!,
-  productos.find((p) => p.id === "playera-sournova")!,
+/* ── Data ─────────────────────────────────────── */
+const allFeatured = [
+  productos.find(p => p.id === "punch-citrico")!,
+  productos.find(p => p.id === "gusanos-acidos")!,
+  productos.find(p => p.id === "playera-sournova")!,
+  productos.find(p => p.id === "shock-azul")!,
+  productos.find(p => p.id === "bolas-fuego")!,
+  productos.find(p => p.id === "gorra-acida")!,
+  productos.find(p => p.id === "furia-mango")!,
+  productos.find(p => p.id === "pack-stickers")!,
 ];
 
-const pillars = [
-  {
-    color: "#BF44FF",
-    titulo: "Sabor sin disculpas",
-    descripcion:
-      "Cada producto está hecho para que tu boca no lo olvide. Ácido real, sabor intenso, cero relleno.",
-  },
-  {
-    color: "#E8196E",
-    titulo: "Cultura primero",
-    descripcion:
-      "No somos una marca de refrescos. Somos un estilo de vida. Nació en las calles de México y no nos vamos a disculpar.",
-  },
-  {
-    color: "#BF44FF",
-    titulo: "Calidad obsesiva",
-    descripcion:
-      "Ingredientes reales, recetas probadas y presentaciones que se ven tan buenas como saben.",
-  },
+const sodas = [
+  { id: "punch-citrico", name: "Punch Cítrico",    tag: "Más vendido",  flavor: "PUNCH CITRICO",   planetColor: "#FF6BD0", gradient: "linear-gradient(155deg, #2A0560 0%, #7B2CFF 60%, #BF44FF 100%)", desc: "Limón, naranja y un patadón ácido." },
+  { id: "shock-azul",    name: "Shock Azul",        tag: "Misterioso",   flavor: "SHOCK AZUL",      planetColor: "#38E1FF", gradient: "linear-gradient(155deg, #0B2E58 0%, #1A2EAA 60%, #38E1FF 100%)", desc: "Sabor eléctrico. Tu boca no sabrá qué pasó." },
+  { id: "furia-mango",   name: "Furia de Mango",    tag: "Nuevo",        flavor: "FURIA MANGO",     planetColor: "#FFB347", gradient: "linear-gradient(155deg, #7B1D00 0%, #C24A00 55%, #FFB347 100%)",  desc: "Mango, chile y ácido. Devastador." },
 ];
 
-const heroWords = ["LA", "VIDA", "SABE", "MEJOR", "ÁCIDA"];
+const gomitas = [
+  { nombre: "Gusanos Ácidos",       color: "#BF44FF", nivel: "Súper ácida" },
+  { nombre: "Bolas de Fuego",       color: "#FF2EA8", nivel: "Explosiva"   },
+  { nombre: "Lenguas de Dragón",    color: "#9966FF", nivel: "Mega ácida"  },
+  { nombre: "Corazones Explosivos", color: "#FF6699", nivel: "Devastadora" },
+];
+
+const gummyDefs = [
+  { top: "10%",  left: "8%",   w: "22%", bg: "radial-gradient(circle at 35% 30%, #FFD93D, #FF8C00)", rot: -15 },
+  { top: "0%",   left: "38%",  w: "28%", bg: "radial-gradient(circle at 35% 30%, #FF6BD0, #FF2EA8)", rot:   8 },
+  { top: "20%",  right: "5%",  w: "26%", bg: "radial-gradient(circle at 35% 30%, #C6FF3D, #6FE000)", rot:  20 },
+  { top: "48%",  left: "0%",   w: "24%", bg: "radial-gradient(circle at 35% 30%, #B47BFF, #7B2CFF)", rot:  35 },
+  { top: "60%",  left: "32%",  w: "30%", bg: "radial-gradient(circle at 35% 30%, #38E1FF, #0094D5)", rot: -20 },
+  { top: "50%",  right: "20%", w: "22%", bg: "radial-gradient(circle at 35% 30%, #FF8AB1, #E5005B)", rot:  45 },
+  { bottom:"5%", left: "18%",  w: "20%", bg: "radial-gradient(circle at 35% 30%, #FFE76A, #FFB000)", rot: -30 },
+  { bottom:"8%", right: "0%",  w: "26%", bg: "radial-gradient(circle at 35% 30%, #D4AAFF, #8E55E8)", rot:  15 },
+];
+
+const founders = [
+  { tile: "a", role: "Fundador + Jefe de Sabor" },
+  { tile: "b", role: "Fundador + Mister Números" },
+  { tile: "c", role: "Fundador + Dirección Creativa" },
+  { tile: "d", role: "Fundador + Head of Hype" },
+];
+
+const features = [
+  { ico: "✦", title: "Sabor real",          desc: "Ingredientes reales, sin nombres raros que no puedas pronunciar." },
+  { ico: "★", title: "Diseñado por niños",  desc: "Nosotros elegimos los sabores, los colores y hasta los nombres." },
+  { ico: "⚡", title: "Envío rápido",        desc: "Llega en 2-3 días a toda la república. Gratis +$500 MXN." },
+  { ico: "♡", title: "Hecho en MX",         desc: "Producido con amor desde Monterrey al cosmos." },
+];
+
+const CATS = ["Todo", "Refresco", "Gomita", "Merch"];
+
+/* ─────────────────────────────────────────────── */
 
 export default function HomePage() {
+  const [activeCat, setActiveCat] = useState("Todo");
+  const { addToCart } = useCart();
+
+  const filtered = useMemo(() =>
+    activeCat === "Todo"
+      ? allFeatured
+      : allFeatured.filter(p => p.categoria === activeCat.toLowerCase()),
+    [activeCat]
+  );
+
+  function buyGomita(name: string, price: number, id: string) {
+    addToCart({ id, nombre: name, precio: price, categoria: "Gomita", gradient: "linear-gradient(155deg, #7B2CFF, #FF2EA8, #38E1FF)", emoji: "🍬" } as CartProduct);
+  }
+
   return (
     <>
-      {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0A0A12] px-4">
-        {/* Film grain */}
-        <div className="grain absolute inset-0 z-0" />
+      {/* ══ HERO ══════════════════════════════════════ */}
+      <section style={{ padding: "80px 0 140px", position: "relative", overflow: "hidden" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 40, alignItems: "center" }} className="hero-grid-responsive">
 
-        <div
-          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
-          style={{ backgroundColor: "#7B1DB8" }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ backgroundColor: "#E8196E" }}
-        />
-        <div
-          className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full blur-3xl opacity-10 pointer-events-none"
-          style={{ backgroundColor: "#7B1DB8" }}
-        />
+            {/* Left copy */}
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="eyebrow"
+                style={{ marginBottom: 24 }}
+              >
+                <span className="dot" /> Drop 01 · Recién lanzado
+              </motion.div>
 
-        {/* Sticker badges */}
-        <motion.div
-          initial={{ opacity: 0, rotate: -8, scale: 0.7 }}
-          animate={{ opacity: 1, rotate: -6, scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.5, ease: "backOut" }}
-          className="absolute top-28 right-8 md:right-24 md:top-32 z-10"
-        >
-          <div className="px-4 py-2 border-2 border-[#E8196E] rounded-xl rotate-[-6deg] text-center bg-[#E8196E]">
-            <span
-              className="text-white text-lg block"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.1em" }}
-            >
-              100% ÁCIDO
-            </span>
-            <span className="text-white/80 text-xs block" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-              sin disculpas
-            </span>
-          </div>
-        </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1, ease: [0.22,1,0.36,1] }}
+                style={{
+                  fontFamily: '"Bagel Fat One", sans-serif', fontWeight: 400,
+                  fontSize: "clamp(56px, 9vw, 120px)", lineHeight: 0.88,
+                  letterSpacing: "-0.02em", margin: "0 0 24px",
+                }}
+              >
+                Sabor de <br />
+                <span style={{
+                  background: "var(--grad-nova)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  filter: "drop-shadow(0 8px 30px rgba(255,46,168,0.4))",
+                }}>
+                  otra galaxia.
+                </span>
+              </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, rotate: 5, scale: 0.7 }}
-          animate={{ opacity: 1, rotate: 8, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5, ease: "backOut" }}
-          className="absolute bottom-32 left-8 md:left-24 z-10 hidden md:block"
-        >
-          <div className="px-4 py-2 border-2 border-[#BF44FF] rounded-xl">
-            <span
-              className="text-[#BF44FF] text-lg block"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.1em" }}
-            >
-              HECHA EN 🇲🇽
-            </span>
-          </div>
-        </motion.div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                style={{ fontSize: 19, lineHeight: 1.55, color: "var(--ink-dim)", maxWidth: 540, margin: "0 0 36px" }}
+              >
+                Refrescos burbujeantes y gomitas súper ácidas hechas para volar mentes. Recién aterrizado desde Monterrey — listo para tu boca.
+              </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, rotate: 3, scale: 0.7 }}
-          animate={{ opacity: 1, rotate: -4, scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.5, ease: "backOut" }}
-          className="absolute bottom-48 right-8 md:right-36 z-10"
-        >
-          <div className="px-4 py-2 border-2 border-[#E8196E] rounded-xl rotate-[-4deg] text-center">
-            <span
-              className="text-[#E8196E] text-lg block"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.1em" }}
-            >
-              HECHA POR
-            </span>
-            <span
-              className="text-[#E8196E] text-2xl block leading-none"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.05em" }}
-            >
-              7 NIÑOS
-            </span>
-          </div>
-        </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.45 }}
+                style={{ display: "flex", gap: 14, flexWrap: "wrap" }}
+              >
+                <Link href="/productos" className="btn btn-primary btn-lg">Compra ahora →</Link>
+                <Link href="/nosotros"  className="btn btn-ghost btn-lg">Nuestra historia</Link>
+              </motion.div>
 
-        {/* Main content */}
-        <div className="relative z-10 text-center max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="flex justify-center mb-6"
-          >
-            <Image
-              src="/logo.png"
-              alt="Sournova"
-              width={260}
-              height={104}
-              className="w-48 md:w-64 h-auto object-contain drop-shadow-[0_0_32px_rgba(191,68,255,0.5)]"
-              priority
-            />
-          </motion.div>
+              {/* Stats */}
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                style={{ display: "flex", gap: 36, marginTop: 56 }}
+              >
+                {[
+                  { num: "12",   lab: "Sabores"          },
+                  { num: "100%", lab: "Hecho por niños"  },
+                  { num: "0",    lab: "Aburrido"         },
+                ].map(({ num, lab }) => (
+                  <div key={lab}>
+                    <div style={{
+                      fontFamily: '"Bagel Fat One", sans-serif', fontSize: 40,
+                      background: "var(--grad-nova)",
+                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                    }}>{num}</div>
+                    <div style={{ fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--ink-mute)" }}>{lab}</div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-[#BF44FF]/80 text-sm font-bold tracking-[0.3em] uppercase mb-6"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-          >
-            Refrescos · Gomitas · Merch
-          </motion.p>
-
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mb-4">
-            {heroWords.map((word, i) => {
-              const strokeStyle: React.CSSProperties =
-                word === "VIDA"
-                  ? { WebkitTextStroke: "2px #BF44FF", color: "transparent" }
-                  : word === "MEJOR"
-                  ? { WebkitTextStroke: "2px #E8196E", color: "transparent" }
-                  : word === "ÁCIDA"
-                  ? { color: "#BF44FF" }
-                  : { color: "#ffffff" };
-              return (
-                <motion.span
-                  key={word + i}
-                  initial={{ opacity: 0, y: 60, skewY: 4 }}
-                  animate={{ opacity: 1, y: 0, skewY: 0 }}
-                  transition={{ delay: 0.1 + i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="block leading-none"
-                  style={{
-                    fontFamily: '"Bebas Neue", sans-serif',
-                    fontSize: "clamp(4rem, 13vw, 10rem)",
-                    letterSpacing: "-0.01em",
-                    ...strokeStyle,
-                  }}
-                >
-                  {word}
-                </motion.span>
-              );
-            })}
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.6 }}
-            className="text-white/60 text-base md:text-lg max-w-lg mx-auto leading-relaxed mt-4 mb-10"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-          >
-            Sabores que te queman la lengua y te dejan pidiendo más. Porque la vida plana no tiene chiste.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link
-              href="/productos"
-              className="group flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-lg font-bold text-[#0A0A12] hover:opacity-90 transition-opacity"
-              style={{
-                fontFamily: '"Plus Jakarta Sans", sans-serif',
-                background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-              }}
-            >
-              Comprar Ahora
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/productos"
-              className="flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/20 text-white rounded-xl text-lg font-medium hover:border-[#BF44FF]/50 hover:bg-[#BF44FF]/5 transition-all"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              Ver Sabores
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        >
-          <span className="text-white/30 text-xs tracking-[0.2em]" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-            SCROLL
-          </span>
-          <div className="w-0.5 h-8 bg-white/20 rounded-full overflow-hidden">
+            {/* Right visual */}
             <motion.div
-              className="w-full rounded-full"
-              style={{ height: "50%", background: "linear-gradient(180deg,#BF44FF,#E8196E)" }}
-              animate={{ y: ["-100%", "200%"] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-            />
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22,1,0.36,1] }}
+            >
+              <HeroVisual />
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* ── MARQUEE ── */}
-      <MarqueeTicker />
-      <MarqueeTicker
-        reverse
-        bg="#130F1E"
-        textColor="#E8196E"
-        separator="·"
-        items={[
-          "SOURNOVA",
-          "REFRESCOS ÁCIDOS",
-          "GOMITAS EXPLOSIVAS",
-          "MERCH SIN FILTRO",
-          "HECHA EN MÉXICO",
-          "SABOR SIN DISCULPAS",
-          "VAS A QUERER MÁS",
-        ]}
-      />
-
-      {/* ── FEATURED PRODUCTS ── */}
-      <section className="bg-[#0A0A12] py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <SectionReveal className="text-center mb-14">
-            <span
-              className="text-[#BF44FF]/70 text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              Lo más pedido
+      {/* ══ GRADIENT TICKER ════════════════════════════ */}
+      <div className="ticker-grad">
+        <div className="ticker-grad-track">
+          {[0,1].map(i => (
+            <span key={i}>
+              SÚPER ÁCIDO <span style={{ color: "white" }}>✦</span>{" "}
+              SABOR ESTELAR <span style={{ color: "white" }}>✦</span>{" "}
+              DROP 01 <span style={{ color: "white" }}>✦</span>{" "}
+              HECHO EN MONTERREY <span style={{ color: "white" }}>✦</span>{" "}
+              SOURNOVA <span style={{ color: "white" }}>✦</span>{" "}
             </span>
-            <h2
-              className="text-6xl md:text-8xl text-white mt-2"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
+          ))}
+        </div>
+      </div>
+
+      {/* ══ FEATURED GRID ══════════════════════════════ */}
+      <section style={{ padding: "120px 0" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
+          <SectionReveal>
+            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 40, marginBottom: 60, flexWrap: "wrap" }}>
+              <div>
+                <div className="eyebrow" style={{ marginBottom: 18 }}><span className="dot" />Catálogo</div>
+                <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(48px, 7vw, 88px)", lineHeight: 0.95, letterSpacing: "-0.02em", margin: 0 }}>
+                  Lo más{" "}
+                  <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    cósmico
+                  </span>
+                </h2>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                {CATS.map(c => (
+                  <button key={c} className={`cat-pill ${activeCat === c ? "active" : ""}`} onClick={() => setActiveCat(c)}>{c}</button>
+                ))}
+              </div>
+            </div>
+          </SectionReveal>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCat}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
+              style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 22 }}
+              className="products-grid-responsive"
             >
-              Productos <span className="text-[#E8196E]">Estrella</span>
+              {filtered.map((p, i) => (
+                <motion.div key={p.id} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
+                  <ProductCard producto={p} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          <SectionReveal className="text-center" style={{ marginTop: 48 } as React.CSSProperties}>
+            <Link href="/productos" className="btn btn-ghost btn-lg">
+              Ver todos los productos →
+            </Link>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* ══ REFRESCOS SHOWCASE ═════════════════════════ */}
+      <section id="refrescos" style={{ padding: "60px 0 120px" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
+          <SectionReveal>
+            <div className="eyebrow" style={{ marginBottom: 18 }}><span className="dot" />Refrescos</div>
+            <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(48px, 7vw, 88px)", lineHeight: 0.95, letterSpacing: "-0.02em", margin: "0 0 12px" }}>
+              Burbujas{" "}
+              <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                interestelares.
+              </span>
             </h2>
-            <p className="text-white/50 text-base mt-3 max-w-md mx-auto" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-              Lo que ya todo México está pidiendo. O más bien: exigiendo.
+            <p style={{ fontSize: 18, color: "var(--ink-dim)", marginBottom: 48, maxWidth: 560 }}>
+              3 sabores, 0 aburrimiento. Hechos con ingredientes reales y la justa medida de magia.
             </p>
           </SectionReveal>
 
-          {/* Bento grid: hero card + two supporting */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <SectionReveal className="md:col-span-2">
-              <ProductCard producto={featured[0]} />
-            </SectionReveal>
-            <div className="flex flex-col gap-5">
-              {featured.slice(1).map((p, i) => (
-                <SectionReveal key={p.id} delay={(i + 1) * 0.12}>
-                  <ProductCard producto={p} />
-                </SectionReveal>
-              ))}
-            </div>
-          </div>
-
-          <SectionReveal className="text-center mt-12" delay={0.3}>
-            <Link
-              href="/productos"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#BF44FF] text-[#BF44FF] rounded-xl text-lg font-bold hover:bg-[#BF44FF] hover:text-[#0A0A12] transition-all"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              Ver todos los productos
-              <ArrowRight size={18} />
-            </Link>
-          </SectionReveal>
-        </div>
-      </section>
-
-      {/* ── WHY SOURNOVA ── */}
-      <section className="bg-[#130F1E] py-24 px-4 relative overflow-hidden">
-        <div
-          className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-10 pointer-events-none"
-          style={{ backgroundColor: "#7B1DB8" }}
-        />
-
-        <div className="max-w-5xl mx-auto">
-          <SectionReveal className="mb-16">
-            <span
-              className="text-[#BF44FF]/70 text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              Por qué existimos
-            </span>
-            <h2
-              className="text-6xl md:text-8xl text-white mt-2"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
-            >
-              ¿Por qué{" "}
-              <span className="text-[#BF44FF]">Sournova?</span>
-            </h2>
-          </SectionReveal>
-
-          <div className="divide-y divide-white/10">
-            {pillars.map((p, i) => (
-              <SectionReveal key={p.titulo} delay={i * 0.1}>
-                <div className="grid items-start py-10 gap-6" style={{ gridTemplateColumns: "7rem 1fr" }}>
-                  <span
-                    className="text-[7rem] leading-none select-none -mt-2 opacity-[0.12]"
-                    style={{ fontFamily: '"Bebas Neue", sans-serif', color: p.color }}
-                  >
-                    0{i + 1}
-                  </span>
-                  <div>
-                    <h3
-                      className="text-4xl md:text-5xl text-white mb-3"
-                      style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
-                    >
-                      {p.titulo}
-                    </h3>
-                    <p
-                      className="text-white/55 leading-relaxed text-base max-w-lg"
-                      style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                    >
-                      {p.descripcion}
-                    </p>
-                  </div>
-                </div>
+          <div className="soda-grid">
+            {sodas.map((soda, i) => (
+              <SectionReveal key={soda.id} delay={i * 0.12}>
+                <SodaCard soda={soda} onAdd={addToCart} />
               </SectionReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FACTS TICKER ── */}
-      <MarqueeTicker
-        bg="#E8196E"
-        textColor="#0A0A12"
-        separator="→"
-        items={[
-          "12 SABORES",
-          "MONTERREY MX",
-          "EST. JULIO 2026",
-          "100% ÁCIDO",
-          "SIN DISCULPAS",
-          "HECHA POR 7 NIÑOS",
-        ]}
-      />
+      {/* ══ GOMITAS ════════════════════════════════════ */}
+      <section id="gomitas" style={{
+        padding: "100px 0", position: "relative",
+        background: "linear-gradient(180deg, rgba(123,44,255,0.08), rgba(255,46,168,0.05))",
+        borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)",
+      }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 60, alignItems: "center" }} className="gummies-row-responsive">
 
-      {/* ── EMAIL SIGNUP ── */}
-      <section className="bg-[#0A0A12] py-24 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <SectionReveal>
-            <div
-              className="p-px rounded-3xl"
-              style={{ background: "linear-gradient(135deg, #7B1DB8, #BF44FF, #E8196E)" }}
-            >
-              <div className="bg-[#0A0A12] rounded-[22px] py-14 px-8">
-                <span className="text-5xl mb-4 block">⚡</span>
-                <h2
-                  className="text-5xl md:text-7xl text-white mb-3"
-                  style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
-                >
-                  Únete al lado{" "}
-                  <span className="text-[#BF44FF]">ácido</span>
-                </h2>
-                <p
-                  className="text-white/55 text-base mb-8 max-w-sm mx-auto"
-                  style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                >
-                  Drops exclusivos, sabores antes que nadie, y caos directo a tu correo.
-                </p>
-                <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  <input
-                    type="email"
-                    placeholder="tucorreo@mail.com"
-                    className="flex-1 px-5 py-3.5 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/30 text-sm outline-none focus:border-[#BF44FF] transition-colors"
-                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-3.5 rounded-xl font-bold text-sm text-[#0A0A12] hover:opacity-90 transition-opacity whitespace-nowrap"
+            {/* Gummy cluster */}
+            <SectionReveal>
+              <div className="gummy-cluster">
+                {gummyDefs.map((g, i) => (
+                  <div
+                    key={i}
+                    className="gummy"
                     style={{
-                      fontFamily: '"Plus Jakarta Sans", sans-serif',
-                      background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-                    }}
-                  >
-                    Entrar al caos
-                  </button>
-                </form>
+                      background: g.bg,
+                      width: g.w,
+                      top: g.top, left: "left" in g ? g.left : undefined,
+                      right: "right" in g ? g.right : undefined,
+                      bottom: "bottom" in g ? g.bottom : undefined,
+                      transform: `rotate(${g.rot}deg)`,
+                      animationDelay: `${-i * 1.2}s`,
+                      animation: `gummy-float 6s ease-in-out ${-i * 1.2}s infinite`,
+                    } as React.CSSProperties}
+                  />
+                ))}
               </div>
+            </SectionReveal>
+
+            {/* Copy */}
+            <SectionReveal delay={0.15}>
+              <div className="eyebrow" style={{ marginBottom: 16 }}><span className="dot" />Gomitas Sour</div>
+              <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 0.95, letterSpacing: "-0.02em", margin: "0 0 16px" }}>
+                Tan ácidas que{" "}
+                <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  te despiertan.
+                </span>
+              </h2>
+              <p style={{ fontSize: 17, color: "var(--ink-dim)", maxWidth: 480, marginBottom: 28 }}>
+                Niveles de acidez del 1 al 5. Mezcla sabores. Hechas con colorantes naturales y mucho cariño cósmico.
+              </p>
+
+              <div style={{ display: "grid", gap: 10, marginBottom: 28 }}>
+                {gomitas.map((g, i) => (
+                  <div key={i} className="flavor-item">
+                    <div style={{
+                      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+                      background: g.color,
+                      boxShadow: "inset -4px -4px 8px rgba(0,0,0,0.25), inset 4px 4px 8px rgba(255,255,255,0.25)",
+                    }} />
+                    <span style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 18 }}>{g.nombre}</span>
+                    <span style={{ fontSize: 12, color: "var(--ink-mute)", marginLeft: "auto", letterSpacing: "0.08em" }}>{g.nivel}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <button className="btn btn-primary btn-lg" onClick={() => buyGomita("Mix Galaxy Gomitas", 48, "gummy-mix")}>
+                  Bolsa Mix · $48
+                </button>
+                <button className="btn btn-ghost btn-lg" onClick={() => buyGomita("Bolsón Cósmico XL", 89, "gummy-mega")}>
+                  Bolsón XL · $89
+                </button>
+              </div>
+            </SectionReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ MERCH ══════════════════════════════════════ */}
+      <section id="merch" style={{ padding: "120px 0" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
+          <SectionReveal>
+            <div className="eyebrow" style={{ marginBottom: 18 }}><span className="dot" />Merch · Drop 01</div>
+            <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(48px, 7vw, 88px)", lineHeight: 0.95, letterSpacing: "-0.02em", margin: "0 0 12px" }}>
+              Vístete de{" "}
+              <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                nova.
+              </span>
+            </h2>
+            <p style={{ fontSize: 18, color: "var(--ink-dim)", marginBottom: 48, maxWidth: 560 }}>
+              Hoodies, tees y accesorios diseñados con la misma energía cósmica que nuestros sabores.
+            </p>
+          </SectionReveal>
+
+          <SectionReveal delay={0.1}>
+            <div className="merch-grid-nova">
+              {/* Large hoodie card */}
+              <MerchCard
+                large
+                bg="linear-gradient(155deg, #2A0560 0%, #7B2CFF 60%, #FF2EA8 100%)"
+                tag="Drop 01"
+                name="Sudadera Sournova"
+                desc="Hoodie oversized · fleece pesado · bordado en pecho"
+                price={650}
+                emoji="🧥"
+                id="sudadera-sournova"
+                onAdd={addToCart}
+              />
+              <MerchCard bg="linear-gradient(155deg, #FF2EA8, #FF6BD0)" tag="Esencial" name="Playera OG" desc="100% algodón · logo oversized" price={380} emoji="👕" id="playera-sournova" onAdd={addToCart} />
+              <MerchCard bg="linear-gradient(155deg, #0c0220, #2A0560)" tag="Nuevo" name="Gorra Ácida" desc="Snapback bordado · violeta" price={320} emoji="🧢" id="gorra-acida" onAdd={addToCart} />
+              <MerchCard bg="linear-gradient(155deg, #7B1DB8, #EDE8FF)" tag="Ltd." name="Botella Térmica" desc="Acero inox · 500ml · 12h frío" price={450} emoji="🍶" id="botella-termica" onAdd={addToCart} />
+              <MerchCard bg="linear-gradient(155deg, #FFB000, #FF2EA8)" tag="Hot" name="Sticker Pack" desc="12 stickers vinil premium" price={120} emoji="🎨" id="pack-stickers" onAdd={addToCart} />
             </div>
           </SectionReveal>
         </div>
       </section>
+
+      {/* ══ HISTORIA ═══════════════════════════════════ */}
+      <section id="historia" style={{ padding: "120px 0", borderTop: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }} className="story-grid-responsive">
+
+            <SectionReveal>
+              <div className="eyebrow" style={{ marginBottom: 18 }}><span className="dot" />Nuestra historia</div>
+              <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(48px, 6vw, 80px)", lineHeight: 0.95, letterSpacing: "-0.02em", margin: "18px 0 24px" }}>
+                7 niños.{" "}
+                <br />
+                <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  1 puesto.
+                </span>
+                {" "}
+                <br />
+                Infinito sabor.
+              </h2>
+              <p style={{ fontSize: 17, color: "var(--ink-dim)", lineHeight: 1.7, marginBottom: 16 }}>
+                Empezamos en el recreo cambiando gomitas por canicas. Hoy, Sournova es nuestra primera empresa real — hecha con la misma energía que ponemos cuando jugamos, dibujamos e inventamos historias.
+              </p>
+              <p style={{ fontSize: 17, color: "var(--ink-dim)", lineHeight: 1.7 }}>
+                En julio de 2026 vendimos por primera vez desde nuestro puesto en Cumbres 5to Sector, Monterrey. Desde ese día no hemos parado.
+              </p>
+              <div style={{ display: "flex", gap: 32, marginTop: 36, paddingTop: 36, borderTop: "1px solid var(--border)" }}>
+                {[
+                  { num: "2026", lab: "Fundada"    },
+                  { num: "7",    lab: "Fundadores" },
+                  { num: "∞",    lab: "Sueños"     },
+                ].map(({ num, lab }) => (
+                  <div key={lab}>
+                    <div style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 40, background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{num}</div>
+                    <div style={{ fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--ink-mute)" }}>{lab}</div>
+                  </div>
+                ))}
+              </div>
+            </SectionReveal>
+
+            <SectionReveal delay={0.15}>
+              <div className="crew-grid">
+                {founders.map((f, i) => (
+                  <div key={i} className={`crew-tile ${f.tile}`}>
+                    <div style={{ position: "relative", zIndex: 1, fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(5,0,16,0.7)", fontWeight: 600 }}>{f.role}</div>
+                    <div style={{ position: "relative", zIndex: 1, fontFamily: '"Bagel Fat One", sans-serif', fontSize: 20, color: "#050010" }}>Sournova</div>
+                  </div>
+                ))}
+              </div>
+            </SectionReveal>
+          </div>
+
+          {/* Features band */}
+          <SectionReveal delay={0.1}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, marginTop: 100, paddingTop: 0 }} className="features-grid-responsive">
+              {features.map(f => (
+                <div key={f.title} style={{ padding: 28, borderRadius: 28, border: "1px solid var(--border)", background: "rgba(255,255,255,0.03)" }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 14, background: "var(--grad-nova)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18, fontSize: 22 }}>
+                    {f.ico}
+                  </div>
+                  <h4 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 22, margin: "0 0 6px" }}>{f.title}</h4>
+                  <p style={{ color: "var(--ink-dim)", fontSize: 14, margin: 0 }}>{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* ══ NEWSLETTER CTA ═════════════════════════════ */}
+      <section style={{ padding: "100px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, rgba(255,46,168,0.18), transparent 60%)", pointerEvents: "none" }} />
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px", position: "relative" }}>
+          <SectionReveal>
+            <div style={{ textAlign: "center" }}>
+              <div className="eyebrow" style={{ margin: "0 auto 18px" }}><span className="dot" />Únete al universo</div>
+              <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(48px, 8vw, 100px)", lineHeight: 0.9, margin: "0 0 20px" }}>
+                ¿Listo para{" "}
+                <span style={{ background: "var(--grad-nova)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  despegar
+                </span>
+                ?
+              </h2>
+              <p style={{ fontSize: 18, color: "var(--ink-dim)", margin: "0 0 36px" }}>
+                Recibe acceso anticipado a drops, descuentos cósmicos y sabores secretos antes que nadie.
+              </p>
+              <NewsletterForm />
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* Responsive helpers */}
+      <style>{`
+        @media (max-width: 1100px) {
+          .hero-grid-responsive    { grid-template-columns: 1fr !important; }
+          .products-grid-responsive { grid-template-columns: repeat(2, 1fr) !important; }
+          .gummies-row-responsive  { grid-template-columns: 1fr !important; }
+          .story-grid-responsive   { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .features-grid-responsive { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 640px) {
+          .products-grid-responsive { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+          .features-grid-responsive { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </>
+  );
+}
+
+/* ── Sub-components ─────────────────────────────── */
+
+function SodaCard({ soda, onAdd }: {
+  soda: typeof sodas[0];
+  onAdd: (p: CartProduct) => void;
+}) {
+  return (
+    <div className="soda-card-nova" style={{ background: soda.gradient }}>
+      <div>
+        <div style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.8, fontWeight: 600 }}>
+          {soda.tag} · 355 ml
+        </div>
+        <h3 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 52, lineHeight: 0.9, margin: "8px 0 0" }}>
+          {soda.name}
+        </h3>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", flex: 1, padding: "24px 0" }}>
+        <SodaCan flavor={soda.flavor} planetColor={soda.planetColor} />
+      </div>
+      <div>
+        <p style={{ margin: "0 0 14px", fontSize: 14, opacity: 0.9 }}>{soda.desc}</p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 28 }}>
+            ${productos.find(p => p.id === soda.id)?.precio ?? 25}{" "}
+            <small style={{ fontSize: 12, opacity: 0.7, fontFamily: '"Space Grotesk", sans-serif' }}>MXN</small>
+          </span>
+          <button
+            className="btn btn-ghost"
+            style={{ borderColor: "rgba(255,255,255,0.5)" }}
+            onClick={() => onAdd({
+              id: soda.id,
+              nombre: soda.name,
+              precio: productos.find(p => p.id === soda.id)?.precio ?? 25,
+              categoria: "Refresco",
+              gradient: soda.gradient,
+              emoji: "🥤",
+            })}
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MerchCard({ large, bg, tag, name, desc, price, emoji, id, onAdd }: {
+  large?:  boolean;
+  bg:      string;
+  tag:     string;
+  name:    string;
+  desc:    string;
+  price:   number;
+  emoji:   string;
+  id:      string;
+  onAdd:   (p: CartProduct) => void;
+}) {
+  return (
+    <div className={`merch-card-nova ${large ? "large" : ""}`} style={{ background: bg }}>
+      <div>
+        <div style={{
+          display: "inline-block", fontSize: 10, letterSpacing: "0.15em",
+          textTransform: "uppercase", fontWeight: 700, padding: "6px 10px",
+          borderRadius: 999, background: "var(--grad-nova)", color: "#050010", marginBottom: 8,
+        }}>{tag}</div>
+        <h3 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: large ? 56 : 32, lineHeight: 0.95, margin: "0 0 6px" }}>{name}</h3>
+        <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, margin: 0 }}>{desc}</p>
+      </div>
+
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 0" }}>
+        <span style={{ fontSize: large ? "8rem" : "5rem", lineHeight: 1, filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.4))" }}>
+          {emoji}
+        </span>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 26 }}>${price} <small style={{ fontSize: 12, opacity: 0.7, fontFamily: '"Space Grotesk", sans-serif' }}>MXN</small></span>
+        <button
+          className="btn btn-ghost"
+          style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(0,0,0,0.2)" }}
+          onClick={() => onAdd({ id, nombre: name, precio: price, categoria: "Merch", gradient: bg, emoji })}
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function NewsletterForm() {
+  const { toast: _toast, addToCart: _ } = useCart();
+  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState("");
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (email.trim()) { setSent(true); setEmail(""); }
+  }
+
+  if (sent) {
+    return (
+      <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+        style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: 28, color: "var(--magenta)" }}>
+        ✦ ¡Bienvenid@ al cosmos!
+      </motion.div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: "flex", gap: 8, maxWidth: 520, margin: "0 auto", padding: 8, borderRadius: 999, border: "1px solid var(--border-strong)", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(10px)" }}>
+      <input
+        type="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder="tu@correo.com"
+        required
+        style={{ flex: 1, background: "transparent", border: 0, outline: "none", padding: "12px 20px", color: "white", fontSize: 15, fontFamily: "inherit" }}
+      />
+      <button type="submit" className="btn btn-primary">Suscribirme →</button>
+    </form>
   );
 }

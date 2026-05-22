@@ -1,103 +1,92 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Zap, Globe } from "lucide-react";
 import SectionReveal from "@/components/SectionReveal";
-import MarqueeTicker from "@/components/MarqueeTicker";
 
 const valores = [
   {
-    icon: Zap,
-    color: "#BF44FF",
+    icon: "⚡",
+    color: "#7B2CFF",
     nombre: "Intensidad",
     descripcion:
       "No hacemos nada a medias. Desde la primera gota hasta el último sticker, todo Sournova está diseñado para que se sienta. Ácido. Real. Sin filtro.",
   },
   {
-    icon: Heart,
-    color: "#E8196E",
+    icon: "♡",
+    color: "#FF2EA8",
     nombre: "Comunidad",
     descripcion:
       "No somos nosotros la marca. Son ustedes. Los que comparten, los que piden, los que nos dicen 'necesito más Quemón de Sandía en mi vida'. Eso somos.",
   },
   {
-    icon: Globe,
-    color: "#BF44FF",
+    icon: "★",
+    color: "#38E1FF",
     nombre: "Identidad",
     descripcion:
       "Hecho en México. Con orgullo. Con caos. Con el sabor que te recuerda que ser de aquí es lo más cool que puedes ser.",
   },
 ];
 
+const stats = [
+  { num: "12",       lab: "Sabores"        },
+  { num: "MX",       lab: "País"           },
+  { num: "50K+",     lab: "Clientes"       },
+  { num: "Jul '26",  lab: "Primer venta"  },
+];
 
 export default function NosotrosPage() {
   return (
     <>
-      {/* ── TYPOGRAPHIC HERO ── */}
-      <section className="relative bg-[#0A0A12] min-h-[80vh] flex flex-col items-center justify-center overflow-hidden px-4 pt-24">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 50% at 50% 60%, rgba(191,68,255,0.08) 0%, transparent 70%)",
-          }}
-        />
+      {/* ── HERO ── */}
+      <section style={{ position: "relative", minHeight: "80vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", padding: "100px 28px 60px" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 50% at 50% 60%, rgba(123,44,255,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-        {/* Big sticker decoration */}
+        {/* EST. 2026 sticker */}
         <motion.div
           initial={{ rotate: -12, scale: 0, opacity: 0 }}
           animate={{ rotate: -10, scale: 1, opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6, ease: "backOut" }}
-          className="absolute top-28 right-4 md:right-16 z-10"
+          style={{ position: "absolute", top: 112, right: 28, zIndex: 10 }}
+          className="sticker-responsive"
         >
-          <div
-            className="w-24 h-24 rounded-full flex flex-col items-center justify-center text-center border-4 border-[#BF44FF]"
-            style={{ backgroundColor: "#BF44FF" }}
-          >
-            <span className="text-[#0A0A12] text-xs font-black leading-tight" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-              EST.
-            </span>
-            <span className="text-[#0A0A12] text-2xl leading-none" style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
-              2026
-            </span>
-            <span className="text-[#0A0A12] text-xs font-black" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-              MTY 26 🇲🇽
-            </span>
+          <div style={{
+            width: 96, height: 96, borderRadius: "50%", display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center", textAlign: "center",
+            background: "var(--grad-nova)", border: "4px solid rgba(255,255,255,0.3)",
+            boxShadow: "0 0 40px rgba(255,46,168,0.4)",
+          }}>
+            <span style={{ color: "#050010", fontSize: 10, fontWeight: 900, lineHeight: 1.2 }}>EST.</span>
+            <span style={{ color: "#050010", fontFamily: '"Bagel Fat One", sans-serif', fontSize: 24, lineHeight: 1 }}>2026</span>
+            <span style={{ color: "#050010", fontSize: 10, fontWeight: 900 }}>MTY 🇲🇽</span>
           </div>
         </motion.div>
 
-        <div className="relative z-10 text-center max-w-6xl mx-auto">
+        <div style={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: 900, margin: "0 auto" }}>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-[#BF44FF]/70 text-sm font-bold tracking-[0.3em] uppercase mb-6"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+            style={{ color: "var(--violet)", fontSize: 12, fontWeight: 700, letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: 24 }}
           >
             Quiénes somos
           </motion.p>
 
-          {/* Main headline */}
           {["Le hicimos", "el ácido,", "cool."].map((line, i) => (
             <motion.div
               key={line}
               initial={{ opacity: 0, x: i % 2 === 0 ? -60 : 60 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 0.2 + i * 0.15, duration: 0.7, ease: [0.22,1,0.36,1] }}
             >
               <span
-                className={`block leading-none ${
-                  line === "cool."
-                    ? "text-[#BF44FF]"
-                    : i === 1
-                    ? "text-stroke text-transparent"
-                    : "text-white"
-                }`}
                 style={{
-                  fontFamily: '"Bebas Neue", sans-serif',
+                  display: "block",
+                  fontFamily: '"Bagel Fat One", sans-serif',
                   fontSize: "clamp(3.5rem, 12vw, 9rem)",
+                  lineHeight: 0.95,
                   letterSpacing: "-0.01em",
-                  ...(i === 1 && { WebkitTextStrokeColor: "#BF44FF" }),
+                  ...(line === "cool."   ? { color: "var(--magenta)" } :
+                      line === "el ácido," ? { WebkitTextStroke: "2px var(--violet)", color: "transparent" } :
+                      { color: "white" }),
                 }}
               >
                 {line}
@@ -106,63 +95,49 @@ export default function NosotrosPage() {
           ))}
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.75, duration: 0.6 }}
-            className="text-white/55 text-base md:text-lg max-w-xl mx-auto mt-8"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+            style={{ color: "var(--ink-dim)", fontSize: 18, maxWidth: 500, margin: "32px auto 0", lineHeight: 1.6 }}
           >
             Nacimos en México con una idea simple: los refrescos y los dulces pueden ser más salvajes, más honestos, y más nosotros.
           </motion.p>
         </div>
       </section>
 
-      {/* ── MARQUEE ── */}
-      <MarqueeTicker
-        bg="#1C1630"
-        textColor="#BF44FF"
-        items={[
-          "NUESTRA HISTORIA",
-          "HECHA EN MONTERREY",
-          "ÁCIDOS DESDE 2026",
-          "SIN FILTRO",
-          "CON ORGULLO MEXICANO",
-        ]}
-      />
+      {/* ── TICKER ── */}
+      <div className="ticker-grad">
+        <div className="ticker-grad-track">
+          {[0,1].map(i => (
+            <span key={i}>
+              NUESTRA HISTORIA <span style={{ color: "white" }}>✦</span>{" "}
+              HECHA EN MONTERREY <span style={{ color: "white" }}>✦</span>{" "}
+              ÁCIDOS DESDE 2026 <span style={{ color: "white" }}>✦</span>{" "}
+              SIN FILTRO <span style={{ color: "white" }}>✦</span>{" "}
+              CON ORGULLO MEXICANO <span style={{ color: "white" }}>✦</span>{" "}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ── ORIGIN STORY ── */}
-      <section className="bg-[#0A0A12] py-24 px-4">
-        <div className="max-w-3xl mx-auto">
+      <section style={{ padding: "120px 28px" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <SectionReveal>
-            <span
-              className="text-[#BF44FF]/70 text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              La historia
-            </span>
-            <h2
-              className="text-5xl md:text-6xl text-white mt-3 mb-8"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
-            >
+            <span style={{ color: "var(--violet)", fontSize: 12, fontWeight: 700, letterSpacing: "0.3em", textTransform: "uppercase" }}>La historia</span>
+            <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(3rem, 8vw, 5rem)", color: "white", margin: "16px 0 32px", lineHeight: 0.95, letterSpacing: "-0.01em" }}>
               De un puesto en{" "}
-              <span className="text-[#E8196E]">Monterrey</span>{" "}
-              al mercado
+              <span style={{ color: "var(--magenta)" }}>Monterrey</span>{" "}
+              al mundo
             </h2>
-            <div
-              className="space-y-5 text-white/60 leading-relaxed text-base"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
+            <div style={{ display: "grid", gap: 20, color: "var(--ink-dim)", lineHeight: 1.8, fontSize: 17 }}>
               <p>
-                Sournova nació en 2026 cuando dos amigos en Monterrey decidieron que estaban hartos de los refrescos aburridos. Pusieron un puesto, y lo demás es historia. En julio de 2026 vendimos por primera vez — y desde ese día no hemos parado. Los sabores eran siempre los mismos en todos lados, los colores siempre los mismos, la actitud siempre la misma: genérica.
+                Sournova nació en 2026 cuando siete amigos en Monterrey decidieron que estaban hartos de los refrescos aburridos. Pusieron un puesto en el parque, en la calle del barranco, Cumbres 5to Sector — y lo demás es historia.
               </p>
               <p>
-                Así que agarraron lo que tenían — una licuadora industrial de segunda mano, una obsesión con el ácido cítrico y demasiado tiempo libre — y empezaron a experimentar. La primera prueba fue un desastre. La décima fue magia. Punch Cítrico llegó al mundo.
+                La primera prueba fue un desastre. La décima fue magia. Punch Cítrico llegó al mundo en julio de 2026. En 48 horas, se agotó. Empezaron a llegar mensajes de desconocidos preguntando dónde conseguirlo.
               </p>
               <p>
-                En 48 horas, las 10 tiendas donde lo dejaron consignado lo agotaron. Empezaron a llegar mensajes de desconocidos preguntando dónde conseguirlo. No había plan. No había inversión. Solo había sabor y actitud.
-              </p>
-              <p>
-                Hoy Sournova tiene 12 sabores activos, una línea de gomitas que tumba webs, y merch que la gente usa con orgullo. Seguimos siendo los mismos de siempre: raros, ácidos, mexicanos, y sin disculpas.
+                No había plan. No había inversión. Solo había sabor y actitud. Hoy Sournova tiene 12 sabores activos, una línea de gomitas que tumba webs, y merch que la gente usa con orgullo. Seguimos siendo los mismos de siempre: raros, ácidos, mexicanos, y sin disculpas.
               </p>
             </div>
           </SectionReveal>
@@ -170,50 +145,39 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── VALORES ── */}
-      <section className="bg-[#130F1E] py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <SectionReveal className="text-center mb-16">
-            <span
-              className="text-[#E8196E]/70 text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              En lo que creemos
-            </span>
-            <h2
-              className="text-6xl md:text-8xl text-white mt-2"
-              style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
-            >
+      <section style={{ padding: "120px 28px", background: "rgba(255,255,255,0.02)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto" }}>
+          <SectionReveal style={{ textAlign: "center", marginBottom: 80 } as React.CSSProperties}>
+            <span style={{ color: "var(--magenta)", fontSize: 12, fontWeight: 700, letterSpacing: "0.3em", textTransform: "uppercase" }}>En lo que creemos</span>
+            <h2 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(3rem, 8vw, 6rem)", lineHeight: 0.95, margin: "16px 0 0", letterSpacing: "-0.01em" }}>
               Nuestros{" "}
-              <span className="text-[#E8196E]">Valores</span>
+              <span style={{ color: "var(--magenta)" }}>Valores</span>
             </h2>
           </SectionReveal>
 
-          <div className="divide-y divide-white/10">
+          <div>
             {valores.map((v, i) => (
               <SectionReveal key={v.nombre} delay={i * 0.12}>
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8 py-12 items-start">
+                <div style={{
+                  display: "grid", gridTemplateColumns: "1fr 2fr", gap: 40,
+                  padding: "48px 0",
+                  borderTop: i === 0 ? "1px solid var(--border)" : undefined,
+                  borderBottom: "1px solid var(--border)",
+                  alignItems: "start",
+                }} className="valor-row-responsive">
                   <div>
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
-                      style={{ backgroundColor: `${v.color}15`, border: `1.5px solid ${v.color}35` }}
-                    >
-                      <v.icon size={22} style={{ color: v.color }} />
+                    <div style={{
+                      width: 56, height: 56, borderRadius: 16, marginBottom: 20,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: `${v.color}20`, border: `1.5px solid ${v.color}40`, fontSize: 24,
+                    }}>
+                      {v.icon}
                     </div>
-                    <h3
-                      className="text-5xl md:text-6xl leading-none"
-                      style={{
-                        fontFamily: '"Bebas Neue", sans-serif',
-                        letterSpacing: "0.02em",
-                        color: v.color,
-                      }}
-                    >
+                    <h3 style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(3rem, 6vw, 4.5rem)", lineHeight: 0.95, color: v.color, letterSpacing: "-0.01em" }}>
                       {v.nombre}
                     </h3>
                   </div>
-                  <p
-                    className="text-white/60 leading-relaxed text-base md:text-lg md:pt-2"
-                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                  >
+                  <p style={{ color: "var(--ink-dim)", fontSize: 18, lineHeight: 1.7, paddingTop: 8 }}>
                     {v.descripcion}
                   </p>
                 </div>
@@ -224,46 +188,34 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── STATS ── */}
-      <section className="py-px" style={{ background: "linear-gradient(135deg,#7B1DB8,#BF44FF,#E8196E)" }}>
-        <div className="bg-[#1C1630] py-20 px-4">
-          <div className="max-w-7xl mx-auto text-center">
-            <SectionReveal>
-              <h2
-                className="text-5xl md:text-7xl mb-12 text-[#BF44FF]"
-                style={{
-                  fontFamily: '"Bebas Neue", sans-serif',
-                  letterSpacing: "0.02em",
-                }}
-              >
-                12 sabores · México · 1 obsesión
-              </h2>
-            </SectionReveal>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { num: "12",   label: "Sabores" },
-                { num: "MX",   label: "País" },
-                { num: "50K+", label: "Clientes" },
-                { num: "Jul '26", label: "Primer venta" },
-              ].map(({ num, label }, i) => (
-                <SectionReveal key={label} delay={i * 0.1}>
-                  <p
-                    className="text-6xl md:text-8xl leading-none text-[#BF44FF]"
-                    style={{ fontFamily: '"Bebas Neue", sans-serif' }}
-                  >
-                    {num}
-                  </p>
-                  <p
-                    className="text-[#EDE8FF]/50 text-sm font-bold tracking-widest uppercase mt-2"
-                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                  >
-                    {label}
-                  </p>
-                </SectionReveal>
-              ))}
-            </div>
+      <section style={{
+        padding: "80px 28px",
+        background: "var(--grad-nova)",
+        borderTop: "1px solid rgba(255,255,255,0.2)",
+      }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32, textAlign: "center" }} className="stats-grid-responsive">
+            {stats.map(({ num, lab }, i) => (
+              <SectionReveal key={lab} delay={i * 0.1}>
+                <div style={{ fontFamily: '"Bagel Fat One", sans-serif', fontSize: "clamp(3rem, 8vw, 5rem)", color: "#050010", lineHeight: 1 }}>
+                  {num}
+                </div>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(5,0,16,0.65)", marginTop: 8 }}>
+                  {lab}
+                </div>
+              </SectionReveal>
+            ))}
           </div>
         </div>
       </section>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .valor-row-responsive  { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .stats-grid-responsive { grid-template-columns: repeat(2, 1fr) !important; }
+          .sticker-responsive    { display: none; }
+        }
+      `}</style>
     </>
   );
 }

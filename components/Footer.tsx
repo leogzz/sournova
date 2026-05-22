@@ -2,157 +2,97 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Camera, AtSign, Play, Send } from "lucide-react";
-import { useState } from "react";
-import { motion } from "framer-motion";
 
 const footerLinks = [
   {
-    heading: "Navegar",
-    links: [
-      { label: "Inicio",    href: "/" },
-      { label: "Productos", href: "/productos" },
-      { label: "Nosotros",  href: "/nosotros" },
-    ],
-  },
-  {
-    heading: "Productos",
+    heading: "Tienda",
     links: [
       { label: "Refrescos", href: "/productos" },
       { label: "Gomitas",   href: "/productos" },
       { label: "Merch",     href: "/productos" },
+      { label: "Drops",     href: "/productos" },
     ],
   },
   {
-    heading: "Legal",
+    heading: "Empresa",
     links: [
-      { label: "Privacidad", href: "#" },
-      { label: "Términos",   href: "#" },
-      { label: "Cookies",    href: "#" },
+      { label: "Historia",    href: "/nosotros" },
+      { label: "Nuestro equipo", href: "/nosotros" },
+      { label: "Prensa",     href: "#" },
+      { label: "Contacto",   href: "mailto:hola@sournova.mx" },
+    ],
+  },
+  {
+    heading: "Ayuda",
+    links: [
+      { label: "Envíos",       href: "#" },
+      { label: "Devoluciones", href: "#" },
+      { label: "FAQ",          href: "#" },
+      { label: "Términos",     href: "#" },
     ],
   },
 ];
 
 const socials = [
-  { icon: Camera, href: "#", label: "Instagram" },
-  { icon: AtSign,  href: "#", label: "Twitter / X" },
-  { icon: Play,    href: "#", label: "YouTube" },
+  { label: "IG", href: "#" },
+  { label: "TT", href: "#" },
+  { label: "YT", href: "#" },
 ];
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [sent,  setSent]  = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) { setSent(true); setEmail(""); }
-  };
-
   return (
-    <footer className="bg-[#0A0A12] border-t border-white/10">
+    <footer style={{ padding: "60px 0 40px", borderTop: "1px solid var(--border)" }}>
+      <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 28px" }}>
 
-      {/* Newsletter strip — gradient border card */}
-      <div className="p-px" style={{ background: "linear-gradient(135deg,#7B1DB8,#BF44FF,#E8196E)" }}>
-        <div className="bg-[#130F1E] py-10 px-6">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3
-                className="text-3xl md:text-4xl text-[#BF44FF]"
-                style={{
-                  fontFamily: '"Bebas Neue", sans-serif',
-                  letterSpacing: "0.03em",
-                }}
-              >
-                Únete al lado ácido 🔥
-              </h3>
-              <p className="text-[#EDE8FF]/60 text-sm mt-1 font-medium" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                Drops exclusivos, sabores nuevos y el caos que mereces.
-              </p>
-            </div>
+        {/* Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }} className="footer-grid-responsive">
 
-            {sent ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="px-6 py-3 rounded-xl font-bold text-sm text-[#BF44FF] border border-[#BF44FF]/30"
-                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-              >
-                ¡Ya eres parte del caos! ⚡
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex w-full md:w-auto gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tucorreo@mail.com"
-                  required
-                  className="flex-1 md:w-64 px-4 py-3 rounded-xl bg-white/5 text-[#EDE8FF] placeholder-white/30 text-sm outline-none border border-white/10 focus:border-[#BF44FF] transition-colors"
-                  style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-3 rounded-xl font-bold text-sm text-[#0A0A12] flex items-center gap-2 hover:opacity-90 transition-opacity"
-                  style={{ background: "linear-gradient(135deg,#BF44FF,#E8196E)", fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                >
-                  <Send size={14} />
-                  Suscribir
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Body */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
-
-          {/* Brand column */}
-          <div className="col-span-2">
-            <Link href="/" className="inline-flex mb-4">
-              <Image src="/logo.png" alt="Sournova" width={140} height={56} className="h-12 w-auto object-contain" />
+          {/* Brand */}
+          <div>
+            <Link href="/" style={{ display: "inline-block", marginBottom: 16 }}>
+              <Image
+                src="/logo.png"
+                alt="Sournova"
+                width={140}
+                height={56}
+                style={{ height: 48, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(123,44,255,0.4))" }}
+              />
             </Link>
-            <p className="text-[#EDE8FF]/45 text-sm leading-relaxed max-w-xs" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-              Nacida en Monterrey. Hecha con caos. Diseñada para los que le entran a todo con sabor ácido.
+            <p style={{ color: "var(--ink-dim)", maxWidth: 300, fontSize: 14, lineHeight: 1.6 }}>
+              Sabor de otra galaxia. Hecha por 7 niños en Monterrey, MX.
             </p>
-            <p className="text-[#BF44FF]/70 text-xs font-semibold tracking-wide mt-3 flex items-center gap-1.5" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-              📍 Cumbres 5to Sector — en el parque, Calle del Barranco, Monterrey NL
+            <p style={{ color: "var(--ink-mute)", fontSize: 12, marginTop: 8 }}>
+              📍 Cumbres 5to Sector — Calle del Barranco, Monterrey NL
             </p>
-            <div className="flex gap-3 mt-6">
-              {socials.map(({ icon: Icon, href, label }) => (
+            <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
+              {socials.map(s => (
                 <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-10 h-10 rounded-xl border border-white/15 flex items-center justify-center text-[#EDE8FF]/50 hover:text-[#BF44FF] hover:border-[#BF44FF]/40 transition-colors"
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="btn-icon"
+                  style={{ width: 40, height: 40, fontSize: 12, fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                 >
-                  <Icon size={17} />
+                  {s.label}
                 </a>
               ))}
             </div>
           </div>
 
           {/* Link columns */}
-          {footerLinks.map((col) => (
+          {footerLinks.map(col => (
             <div key={col.heading}>
-              <h4
-                className="text-lg mb-4"
-                style={{
-                  fontFamily: '"Bebas Neue", sans-serif',
-                  letterSpacing: "0.05em",
-                  color: "#BF44FF",
-                }}
-              >
+              <h5 style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--ink-mute)", margin: "0 0 18px", fontWeight: 600 }}>
                 {col.heading}
-              </h4>
-              <ul className="flex flex-col gap-2">
-                {col.links.map((link) => (
+              </h5>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+                {col.links.map(link => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[#EDE8FF]/45 hover:text-[#EDE8FF] text-sm transition-colors"
-                      style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+                      style={{ color: "var(--ink-dim)", textDecoration: "none", fontSize: 14, transition: "color .2s ease" }}
+                      onMouseEnter={e => (e.currentTarget.style.color = "white")}
+                      onMouseLeave={e => (e.currentTarget.style.color = "var(--ink-dim)")}
                     >
                       {link.label}
                     </Link>
@@ -164,21 +104,22 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-[#EDE8FF]/25 text-xs" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-            © {new Date().getFullYear()} Sournova. Todos los derechos reservados. Hecho con ácido en Monterrey, NL 🇲🇽
-          </p>
-          <p
-            className="text-xs text-[#E8196E]"
-            style={{
-              fontFamily: '"Bebas Neue", sans-serif',
-              letterSpacing: "0.1em",
-            }}
-          >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 28, borderTop: "1px solid var(--border)", fontSize: 13, color: "var(--ink-mute)", flexWrap: "wrap", gap: 12 }}>
+          <span>© {new Date().getFullYear()} Sournova · Hecho con ✦ por 7 niños.</span>
+          <span style={{ fontFamily: '"Bagel Fat One", sans-serif', letterSpacing: "0.1em", color: "var(--magenta)" }}>
             LA VIDA SABE MEJOR ÁCIDA
-          </p>
+          </span>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-grid-responsive { grid-template-columns: 1fr 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          .footer-grid-responsive { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </footer>
   );
 }
