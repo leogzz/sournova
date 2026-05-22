@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-19T00:00:00Z",
+  "title": "Design System: Sournova",
+  "extensions": {
+    "colorMeta": {
+      "limon-electrico": {
+        "role": "primary",
+        "displayName": "Limón Eléctrico",
+        "canonical": "oklch(93% 0.19 100)",
+        "tonalRamp": [
+          "oklch(15% 0.05 100)",
+          "oklch(25% 0.08 100)",
+          "oklch(38% 0.12 100)",
+          "oklch(52% 0.15 100)",
+          "oklch(65% 0.18 100)",
+          "oklch(78% 0.19 100)",
+          "oklch(88% 0.19 100)",
+          "oklch(95% 0.12 100)"
+        ]
+      },
+      "verde-toxico": {
+        "role": "primary",
+        "displayName": "Verde Tóxico",
+        "canonical": "oklch(92% 0.28 130)",
+        "tonalRamp": [
+          "oklch(12% 0.06 130)",
+          "oklch(22% 0.10 130)",
+          "oklch(35% 0.15 130)",
+          "oklch(48% 0.20 130)",
+          "oklch(62% 0.24 130)",
+          "oklch(75% 0.27 130)",
+          "oklch(85% 0.28 130)",
+          "oklch(93% 0.20 130)"
+        ]
+      },
+      "rosa-bala": {
+        "role": "secondary",
+        "displayName": "Rosa Bala",
+        "canonical": "oklch(60% 0.27 350)",
+        "tonalRamp": [
+          "oklch(15% 0.07 350)",
+          "oklch(25% 0.12 350)",
+          "oklch(35% 0.17 350)",
+          "oklch(45% 0.22 350)",
+          "oklch(55% 0.26 350)",
+          "oklch(65% 0.27 350)",
+          "oklch(75% 0.22 350)",
+          "oklch(85% 0.15 350)"
+        ]
+      },
+      "noche-profunda": {
+        "role": "neutral",
+        "displayName": "Noche Profunda",
+        "canonical": "oklch(5% 0.002 250)",
+        "tonalRamp": [
+          "oklch(5% 0.002 250)",
+          "oklch(10% 0.002 250)",
+          "oklch(20% 0.003 250)",
+          "oklch(32% 0.004 250)",
+          "oklch(46% 0.004 250)",
+          "oklch(60% 0.003 250)",
+          "oklch(75% 0.003 250)",
+          "oklch(90% 0.002 250)"
+        ]
+      },
+      "superficie-oscura": {
+        "role": "neutral",
+        "displayName": "Superficie Oscura",
+        "canonical": "oklch(8% 0.002 250)",
+        "tonalRamp": [
+          "oklch(5% 0.002 250)",
+          "oklch(8% 0.002 250)",
+          "oklch(14% 0.003 250)",
+          "oklch(22% 0.003 250)",
+          "oklch(35% 0.003 250)",
+          "oklch(52% 0.003 250)",
+          "oklch(68% 0.002 250)",
+          "oklch(84% 0.002 250)"
+        ]
+      },
+      "papel-mantequilla": {
+        "role": "neutral",
+        "displayName": "Papel Mantequilla",
+        "canonical": "oklch(96% 0.010 80)",
+        "tonalRamp": [
+          "oklch(15% 0.003 80)",
+          "oklch(30% 0.005 80)",
+          "oklch(45% 0.007 80)",
+          "oklch(60% 0.008 80)",
+          "oklch(72% 0.009 80)",
+          "oklch(82% 0.010 80)",
+          "oklch(90% 0.010 80)",
+          "oklch(96% 0.010 80)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines only. Bebas Neue at maximum scale. Uncomfortable = correct." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles. Bebas Neue. Always large." },
+      "title": { "displayName": "Title", "purpose": "Card headings, timeline entries, component labels." },
+      "body": { "displayName": "Body", "purpose": "All descriptive prose. Plus Jakarta Sans. Max 65ch." },
+      "label": { "displayName": "Label", "purpose": "Category tags, eyebrow text, nav links, ticker items. Bold, uppercase, wide-tracked." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-brand", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Primary ease for entrance animations and reveals. Fast finish, no bounce." },
+      { "name": "ease-out-standard", "value": "ease-out", "purpose": "Color and opacity transitions on interactive states." },
+      { "name": "marquee-duration", "value": "30s", "purpose": "Marquee ticker scroll speed. Adjust via prop." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1400px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button Primary",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA. Limón Eléctrico fill, Noche Profunda text. Transitions to Verde Tóxico on hover.",
+      "html": "<button class=\"ds-btn-primary\">Comprar Ahora <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"display:inline-block;vertical-align:middle;margin-left:6px\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #FFE500; color: #0a0a0a; padding: 14px 32px; border-radius: 12px; border: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.01em; cursor: pointer; transition: background 200ms ease-out, transform 100ms ease-out; } .ds-btn-primary:hover { background: #AAFF00; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #FFE500; outline-offset: 3px; }"
+    },
+    {
+      "name": "Button Ghost",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary CTA. Transparent with white border. Pairs alongside Button Primary.",
+      "html": "<button class=\"ds-btn-ghost\">Ver Sabores</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: rgba(245,240,232,0.85); padding: 14px 32px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.20); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; font-weight: 500; cursor: pointer; transition: border-color 200ms ease-out, background 200ms ease-out; } .ds-btn-ghost:hover { border-color: rgba(255,255,255,0.50); background: rgba(255,255,255,0.05); } .ds-btn-ghost:active { transform: scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid #FFE500; outline-offset: 3px; }"
+    },
+    {
+      "name": "Button Outline Accent",
+      "kind": "button",
+      "refersTo": "button-outline-accent",
+      "description": "Tertiary CTA. Limón Eléctrico border and text. Fills on hover.",
+      "html": "<button class=\"ds-btn-outline\">Ver todos los productos <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"display:inline-block;vertical-align:middle;margin-left:6px\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #FFE500; padding: 14px 32px; border-radius: 12px; border: 2px solid #FFE500; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; cursor: pointer; transition: background 200ms ease-out, color 200ms ease-out; } .ds-btn-outline:hover { background: #FFE500; color: #0a0a0a; } .ds-btn-outline:active { transform: scale(0.97); } .ds-btn-outline:focus-visible { outline: 2px solid #FFE500; outline-offset: 3px; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "The primary product display unit. Colored image area + content area. Scale on hover.",
+      "html": "<div class=\"ds-product-card\"><div class=\"ds-product-card__image\" style=\"background:#FFE500\"><div class=\"ds-product-card__circle\"></div><span class=\"ds-product-card__emoji\">🍋</span><span class=\"ds-product-card__img-label\">PUNCH CÍTRICO</span><div class=\"ds-product-card__shimmer\"></div></div><div class=\"ds-product-card__body\"><span class=\"ds-badge\">Refresco</span><h3 class=\"ds-product-card__name\">Punch Cítrico</h3><p class=\"ds-product-card__desc\">Limón, naranja y un patadón ácido que no pediste pero que ya necesitas.</p><div class=\"ds-product-card__footer\"><span class=\"ds-product-card__price\">$38 <small>MXN</small></span><button class=\"ds-btn-add\">+ Agregar</button></div></div></div>",
+      "css": ".ds-product-card { display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.10); background: #111111; transition: transform 250ms ease-out, box-shadow 250ms ease-out; cursor: pointer; } .ds-product-card:hover { transform: scale(1.03) translateY(-4px); } .ds-product-card__image { position: relative; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; } .ds-product-card__circle { position: absolute; width: 140px; height: 140px; border-radius: 50%; background: rgba(0,0,0,0.20); } .ds-product-card__emoji { position: relative; font-size: 5rem; z-index: 1; } .ds-product-card__img-label { position: relative; z-index: 1; font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; letter-spacing: 0.1em; color: rgba(10,10,10,0.60); margin-top: 6px; } .ds-product-card__shimmer { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 100%); opacity: 0; transition: opacity 300ms; } .ds-product-card:hover .ds-product-card__shimmer { opacity: 1; } .ds-product-card__body { display: flex; flex-direction: column; gap: 10px; padding: 16px; flex: 1; } .ds-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; border: 1.5px solid #4488FF; color: #4488FF; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; align-self: flex-start; } .ds-product-card__name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #f5f0e8; letter-spacing: 0.03em; line-height: 1.1; } .ds-product-card__desc { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8125rem; color: rgba(245,240,232,0.55); line-height: 1.6; flex: 1; } .ds-product-card__footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); } .ds-product-card__price { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: #FFE500; } .ds-product-card__price small { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; font-weight: 400; color: rgba(245,240,232,0.40); } .ds-btn-add { display: inline-flex; align-items: center; gap: 4px; padding: 8px 14px; border-radius: 10px; background: #FFE500; color: #0a0a0a; border: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: background 150ms ease-out; } .ds-btn-add:hover { background: #AAFF00; }"
+    },
+    {
+      "name": "Filter Chip Active",
+      "kind": "chip",
+      "refersTo": "filter-chip-active",
+      "description": "Active state of the Productos filter tab. Category-colored fill.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip--active\">Todos</button><button class=\"ds-chip\">Refrescos</button><button class=\"ds-chip\">Gomitas</button><button class=\"ds-chip\">Merch</button></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; align-items: center; } .ds-chip { display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.10); background: transparent; color: rgba(245,240,232,0.50); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: background 200ms, color 200ms, border-color 200ms; } .ds-chip:hover { border-color: rgba(255,255,255,0.25); color: rgba(245,240,232,0.80); } .ds-chip--active { background: #FFE500; color: #0a0a0a; border-color: #FFE500; } .ds-chip--active:hover { background: #FFE500; }"
+    },
+    {
+      "name": "Category Badge",
+      "kind": "chip",
+      "refersTo": "badge-pill",
+      "description": "Small pill badge used on product cards to indicate category.",
+      "html": "<span class=\"ds-badge-refresco\">Refresco</span> <span class=\"ds-badge-gomita\">Gomita</span> <span class=\"ds-badge-merch\">Merch</span>",
+      "css": ".ds-badge-refresco, .ds-badge-gomita, .ds-badge-merch { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; } .ds-badge-refresco { color: #4488FF; border: 1.5px solid #4488FF; } .ds-badge-gomita { color: #AAFF00; border: 1.5px solid #AAFF00; } .ds-badge-merch { color: #FF2D78; border: 1.5px solid #FF2D78; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": null,
+      "description": "Form field used on Contacto and newsletter strips. Focus border shifts to Limón Eléctrico.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field__label\" for=\"ds-input\">Correo electrónico</label><input class=\"ds-input\" id=\"ds-input\" type=\"email\" placeholder=\"tucorreo@mail.com\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; } .ds-field__label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8125rem; font-weight: 600; color: rgba(245,240,232,0.70); } .ds-input { width: 100%; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #f5f0e8; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; outline: none; transition: border-color 200ms ease-out; } .ds-input::placeholder { color: rgba(245,240,232,0.30); } .ds-input:focus { border-color: #FFE500; } .ds-input:focus-visible { border-color: #FFE500; }"
+    },
+    {
+      "name": "Marquee Ticker",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Infinite scroll band. Sournova signature divider. Configurable background and text color.",
+      "html": "<div class=\"ds-marquee\" style=\"background:#FFE500\"><div class=\"ds-marquee__track\"><span class=\"ds-marquee__item\">PUNCH CÍTRICO <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">SHOCK AZUL <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">LA VIDA SABE MEJOR ÁCIDA <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">SOURNOVA <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">PUNCH CÍTRICO <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">SHOCK AZUL <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">LA VIDA SABE MEJOR ÁCIDA <span class=\"ds-marquee__sep\">★</span></span><span class=\"ds-marquee__item\">SOURNOVA <span class=\"ds-marquee__sep\">★</span></span></div></div>",
+      "css": "@keyframes ds-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } } .ds-marquee { overflow: hidden; width: 100%; padding: 10px 0; } .ds-marquee__track { display: flex; width: max-content; animation: ds-marquee 30s linear infinite; white-space: nowrap; } .ds-marquee:hover .ds-marquee__track { animation-play-state: paused; } .ds-marquee__item { font-family: 'Bebas Neue', sans-serif; font-size: 1.125rem; letter-spacing: 0.1em; color: #0a0a0a; padding: 0 16px; display: inline-flex; align-items: center; gap: 16px; } .ds-marquee__sep { opacity: 0.60; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La Era Sticker Bomb",
+    "overview": "Sournova's visual system is a controlled explosion. Every surface is treated like a wall in Tepito after a concert — saturated, layered, unapologetically loud. But unlike actual chaos, the sticker bomb is intentional: each element knows exactly where it belongs and why. The darkness is always the foundation; the color is always the event.\n\nThe system runs dark. Not because tools look cool dark, but because this is the México del OXXO a las 2am — neon on asfalto, someone blasting something from their phone, the smell of tamarindo in the air. Every screen is that moment. The background is deep and absolute; the accents arrive like photon blasts.\n\nTypography is unapologetically large and condensed (Bebas Neue) or confident and direct (Plus Jakarta Sans). There are exactly two font families and zero exceptions. Scale does the heavy lifting: the contrast between a 10rem headline and a 14px label IS the hierarchy.",
+    "keyCharacteristics": [
+      "Dark base, neon signal — the surface is always night; the color is always electricity",
+      "Maximum typographic contrast — Bebas Neue at maximum scale, Plus Jakarta Sans at confident minimum",
+      "Flat depth — layers differentiated by surface darkness, never by shadow",
+      "Sticker-bomb density — every section carries maximum intent, no neutral breathing rooms",
+      "Three-color battery — Limón Eléctrico leads; Verde Tóxico and Rosa Bala support and rotate by context"
+    ],
+    "rules": [
+      { "name": "La Regla de la Batería", "body": "Limón Eléctrico always leads. Verde Tóxico and Rosa Bala can swap position but never both dominate the same viewport simultaneously. One signal at a time.", "section": "colors" },
+      { "name": "La Regla del Fondo", "body": "The base is always Noche Profunda or Superficie Oscura. There are no light-mode pages. The only light surface allowed is the newsletter promo strip, and even then the text is Noche Profunda.", "section": "colors" },
+      { "name": "La Regla de Las Dos Fuentes", "body": "Exactly two font families: Bebas Neue and Plus Jakarta Sans. No third family, no system fonts in visible UI, no Inter.", "section": "typography" },
+      { "name": "La Regla del Tamaño", "body": "If a Bebas Neue heading isn't making someone slightly uncomfortable with how large it is, make it bigger. The display scale is clamp(4rem, 13vw, 10rem) and it does not apologize.", "section": "typography" },
+      { "name": "La Regla del Asfalto", "body": "Elevation is expressed in surface darkness. Deeper surfaces are darker. A raised card uses #111111 over a #0a0a0a page. If you reach for a box-shadow, stop and reach for a darker background instead.", "section": "elevation" },
+      { "name": "La Regla del Blob", "body": "Decorative glow blobs (large blur-3xl radial gradient divs) are atmospheric, not structural. They never carry semantic meaning. They sit below content at pointer-events: none, 10–20% opacity.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Noche Profunda (#0a0a0a) as the base for every primary page section.",
+      "Do size Bebas Neue display text at clamp(4rem, 13vw, 10rem) or larger for hero headlines.",
+      "Do use Limón Eléctrico as the CTA color on every screen.",
+      "Do express depth through surface darkening — never add shadows.",
+      "Do mix text-stroke (outlined) and solid fill within the same Bebas Neue headline.",
+      "Do keep body copy at or below 65ch.",
+      "Do use Framer Motion whileInView for section reveals and whileTap: { scale: 0.97 } for button interactions.",
+      "Do treat every badge and category tag as a sticker: pill-shaped, high contrast, Plus Jakarta Sans Bold.",
+      "Do use glow blobs (large blur-3xl divs, 10–20% opacity) as atmospheric background decoration on hero sections."
+    ],
+    "donts": [
+      "Don't use Jarritos or refresco clásico aesthetics: naïf illustration, retro-folk palettes, hand-drawn type, tierra tones.",
+      "Don't use DTC American minimalism: cream backgrounds, single geometric sans, oversized whitespace.",
+      "Don't use pastel colors or cute rounded illustration.",
+      "Don't add cold European fashion reserve — extreme whitespace, micro-type, grey-on-white.",
+      "Don't write a box-shadow. Depth is darker surfaces.",
+      "Don't use gradient text (background-clip: text + gradient). Prohibited.",
+      "Don't add a third typeface.",
+      "Don't create neutral breathing-room sections with light backgrounds.",
+      "Don't use border-left or border-right greater than 1px as a colored accent stripe.",
+      "Don't use Bebas Neue below 1.5rem.",
+      "Don't animate layout properties (width, height, top, left). Animate transform and opacity only."
+    ]
+  }
+}

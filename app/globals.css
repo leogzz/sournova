@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* ── Nova palette ── */
+  --color-nova-violet:   #BF44FF;
+  --color-nova-magenta:  #E8196E;
+  --color-nova-deep:     #7B1DB8;
+  --color-nova-base:     #0A0A12;
+  --color-nova-surface:  #130F1E;
+  --color-nova-elevated: #1C1630;
+  --color-nova-text:     #EDE8FF;
+  --color-nova-muted:    rgba(237,232,255,0.55);
+
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body:    "Plus Jakarta Sans", sans-serif;
+}
+
+/* ── Marquee animations ── */
+@keyframes marquee {
+  from { transform: translateX(0%); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0%); }
+}
+
+/* ── Base reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #0A0A12;
+  color: #EDE8FF;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: #0A0A12; }
+::-webkit-scrollbar-thumb { background: #BF44FF; border-radius: 4px; }
+
+/* ── Selection ── */
+::selection { background: #BF44FF; color: #0A0A12; }
+
+/* ── Helpers ── */
+.font-display { font-family: "Bebas Neue", sans-serif; }
+.font-body    { font-family: "Plus Jakarta Sans", sans-serif; }
+
+/* Outlined text (stroke only, transparent fill) */
+.text-stroke {
+  -webkit-text-stroke: 2px currentColor;
+  color: transparent;
+}
+.text-stroke-thin {
+  -webkit-text-stroke: 1.5px currentColor;
+  color: transparent;
+}
+
+/* Category badge pill */
+.badge-sticker {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 11px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Infinite marquee */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* Nova gradient – logo-matching purple→magenta */
+.grad-nova {
+  background: linear-gradient(135deg, #7B1DB8 0%, #BF44FF 50%, #E8196E 100%);
+}
+.grad-nova-text {
+  background: linear-gradient(90deg, #BF44FF, #E8196E);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
