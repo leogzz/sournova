@@ -188,24 +188,30 @@ export default function NosotrosPage() {
             </h2>
           </SectionReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="divide-y divide-white/10">
             {valores.map((v, i) => (
-              <SectionReveal key={v.nombre} delay={i * 0.15}>
-                <div className="p-8 rounded-2xl border border-white/10 bg-[#0A0A12] h-full flex flex-col">
-                  <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
-                    style={{ backgroundColor: `${v.color}15`, border: `2px solid ${v.color}30` }}
-                  >
-                    <v.icon size={30} style={{ color: v.color }} />
+              <SectionReveal key={v.nombre} delay={i * 0.12}>
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8 py-12 items-start">
+                  <div>
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                      style={{ backgroundColor: `${v.color}15`, border: `1.5px solid ${v.color}35` }}
+                    >
+                      <v.icon size={22} style={{ color: v.color }} />
+                    </div>
+                    <h3
+                      className="text-5xl md:text-6xl leading-none"
+                      style={{
+                        fontFamily: '"Bebas Neue", sans-serif',
+                        letterSpacing: "0.02em",
+                        color: v.color,
+                      }}
+                    >
+                      {v.nombre}
+                    </h3>
                   </div>
-                  <h3
-                    className="text-4xl text-white mb-4"
-                    style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.03em" }}
-                  >
-                    {v.nombre}
-                  </h3>
                   <p
-                    className="text-white/55 leading-relaxed text-sm flex-1"
+                    className="text-white/60 leading-relaxed text-base md:text-lg md:pt-2"
                     style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
                   >
                     {v.descripcion}
@@ -223,13 +229,10 @@ export default function NosotrosPage() {
           <div className="max-w-7xl mx-auto text-center">
             <SectionReveal>
               <h2
-                className="text-5xl md:text-7xl mb-12"
+                className="text-5xl md:text-7xl mb-12 text-[#BF44FF]"
                 style={{
                   fontFamily: '"Bebas Neue", sans-serif',
                   letterSpacing: "0.02em",
-                  background: "linear-gradient(90deg,#BF44FF,#E8196E)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
                 }}
               >
                 12 sabores · México · 1 obsesión
@@ -244,13 +247,8 @@ export default function NosotrosPage() {
               ].map(({ num, label }, i) => (
                 <SectionReveal key={label} delay={i * 0.1}>
                   <p
-                    className="text-6xl md:text-8xl leading-none"
-                    style={{
-                      fontFamily: '"Bebas Neue", sans-serif',
-                      background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
+                    className="text-6xl md:text-8xl leading-none text-[#BF44FF]"
+                    style={{ fontFamily: '"Bebas Neue", sans-serif' }}
                   >
                     {num}
                   </p>

@@ -172,14 +172,14 @@ export default function ProductosPage() {
                 </p>
               </div>
               <a
-                href="/contacto"
+                href="mailto:hola@sournova.mx"
                 className="flex-shrink-0 px-6 py-3 rounded-xl font-bold text-sm text-[#0A0A12] hover:opacity-90 transition-opacity"
                 style={{
                   fontFamily: '"Plus Jakarta Sans", sans-serif',
                   background: "linear-gradient(135deg,#BF44FF,#E8196E)",
                 }}
               >
-                Contactar
+                Escribirnos
               </a>
             </div>
           </SectionReveal>

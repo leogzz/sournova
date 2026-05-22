@@ -57,13 +57,10 @@ export default function Footer() {
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3
-                className="text-3xl md:text-4xl"
+                className="text-3xl md:text-4xl text-[#BF44FF]"
                 style={{
                   fontFamily: '"Bebas Neue", sans-serif',
                   letterSpacing: "0.03em",
-                  background: "linear-gradient(90deg,#BF44FF,#E8196E)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
                 }}
               >
                 Únete al lado ácido 🔥
@@ -172,13 +169,10 @@ export default function Footer() {
             © {new Date().getFullYear()} Sournova. Todos los derechos reservados. Hecho con ácido en Monterrey, NL 🇲🇽
           </p>
           <p
-            className="text-xs"
+            className="text-xs text-[#E8196E]"
             style={{
               fontFamily: '"Bebas Neue", sans-serif',
               letterSpacing: "0.1em",
-              background: "linear-gradient(90deg,#BF44FF,#E8196E)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
             }}
           >
             LA VIDA SABE MEJOR ÁCIDA

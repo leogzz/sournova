@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Zap, Flame, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import MarqueeTicker from "@/components/MarqueeTicker";
 import ProductCard from "@/components/ProductCard";
 import SectionReveal from "@/components/SectionReveal";
@@ -12,27 +12,23 @@ import { productos } from "@/data/productos";
 const featured = [
   productos.find((p) => p.id === "punch-citrico")!,
   productos.find((p) => p.id === "gusanos-acidos")!,
-  productos.find((p) => p.id === "shock-azul")!,
   productos.find((p) => p.id === "playera-sournova")!,
 ];
 
 const pillars = [
   {
-    icon: Zap,
     color: "#BF44FF",
     titulo: "Sabor sin disculpas",
     descripcion:
       "Cada producto está hecho para que tu boca no lo olvide. Ácido real, sabor intenso, cero relleno.",
   },
   {
-    icon: Flame,
     color: "#E8196E",
     titulo: "Cultura primero",
     descripcion:
       "No somos una marca de refrescos. Somos un estilo de vida. Nació en las calles de México y no nos vamos a disculpar.",
   },
   {
-    icon: Star,
     color: "#BF44FF",
     titulo: "Calidad obsesiva",
     descripcion:
@@ -47,6 +43,9 @@ export default function HomePage() {
     <>
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0A0A12] px-4">
+        {/* Film grain */}
+        <div className="grain absolute inset-0 z-0" />
+
         <div
           className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
           style={{ backgroundColor: "#7B1DB8" }}
@@ -273,12 +272,18 @@ export default function HomePage() {
             </p>
           </SectionReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featured.map((p, i) => (
-              <SectionReveal key={p.id} delay={i * 0.1}>
-                <ProductCard producto={p} />
-              </SectionReveal>
-            ))}
+          {/* Bento grid: hero card + two supporting */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <SectionReveal className="md:col-span-2">
+              <ProductCard producto={featured[0]} />
+            </SectionReveal>
+            <div className="flex flex-col gap-5">
+              {featured.slice(1).map((p, i) => (
+                <SectionReveal key={p.id} delay={(i + 1) * 0.12}>
+                  <ProductCard producto={p} />
+                </SectionReveal>
+              ))}
+            </div>
           </div>
 
           <SectionReveal className="text-center mt-12" delay={0.3}>
@@ -301,8 +306,8 @@ export default function HomePage() {
           style={{ backgroundColor: "#7B1DB8" }}
         />
 
-        <div className="max-w-7xl mx-auto">
-          <SectionReveal className="text-center mb-16">
+        <div className="max-w-5xl mx-auto">
+          <SectionReveal className="mb-16">
             <span
               className="text-[#BF44FF]/70 text-sm font-bold tracking-[0.3em] uppercase"
               style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
@@ -318,29 +323,30 @@ export default function HomePage() {
             </h2>
           </SectionReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="divide-y divide-white/10">
             {pillars.map((p, i) => (
-              <SectionReveal key={p.titulo} delay={i * 0.15}>
-                <div className="group p-8 rounded-2xl border border-white/10 bg-[#0A0A12] hover:border-white/20 transition-colors h-full flex flex-col">
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6"
-                    style={{ backgroundColor: `${p.color}20`, border: `2px solid ${p.color}40` }}
+              <SectionReveal key={p.titulo} delay={i * 0.1}>
+                <div className="grid items-start py-10 gap-6" style={{ gridTemplateColumns: "7rem 1fr" }}>
+                  <span
+                    className="text-[7rem] leading-none select-none -mt-2 opacity-[0.12]"
+                    style={{ fontFamily: '"Bebas Neue", sans-serif', color: p.color }}
                   >
-                    <p.icon size={26} style={{ color: p.color }} />
+                    0{i + 1}
+                  </span>
+                  <div>
+                    <h3
+                      className="text-4xl md:text-5xl text-white mb-3"
+                      style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.02em" }}
+                    >
+                      {p.titulo}
+                    </h3>
+                    <p
+                      className="text-white/55 leading-relaxed text-base max-w-lg"
+                      style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+                    >
+                      {p.descripcion}
+                    </p>
                   </div>
-                  <h3
-                    className="text-3xl mb-3 text-white"
-                    style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.03em" }}
-                  >
-                    {p.titulo}
-                  </h3>
-                  <p
-                    className="text-white/55 leading-relaxed text-sm flex-1"
-                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                  >
-                    {p.descripcion}
-                  </p>
-                  <div className="w-12 h-1 rounded-full mt-6" style={{ backgroundColor: p.color }} />
                 </div>
               </SectionReveal>
             ))}
@@ -348,41 +354,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── STATS BAND ── */}
-      <section className="py-px" style={{ background: "linear-gradient(135deg,#7B1DB8,#BF44FF,#E8196E)" }}>
-        <div className="bg-[#1C1630] py-14 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row items-center justify-around gap-8">
-              {[
-                { num: "12", label: "Sabores activos" },
-                { num: "MX", label: "País" },
-                { num: "1",  label: "Obsesión" },
-                { num: "∞",  label: "Ácido" },
-              ].map(({ num, label }, i) => (
-                <SectionReveal key={label} delay={i * 0.1} className="text-center">
-                  <p
-                    className="text-7xl md:text-8xl leading-none"
-                    style={{
-                      fontFamily: '"Bebas Neue", sans-serif',
-                      background: "linear-gradient(135deg,#BF44FF,#E8196E)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    {num}
-                  </p>
-                  <p
-                    className="text-[#EDE8FF]/50 text-sm font-bold tracking-widest uppercase mt-1"
-                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                  >
-                    {label}
-                  </p>
-                </SectionReveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── FACTS TICKER ── */}
+      <MarqueeTicker
+        bg="#E8196E"
+        textColor="#0A0A12"
+        separator="→"
+        items={[
+          "12 SABORES",
+          "MONTERREY MX",
+          "EST. JULIO 2026",
+          "100% ÁCIDO",
+          "SIN DISCULPAS",
+          "HECHA POR 7 NIÑOS",
+        ]}
+      />
 
       {/* ── EMAIL SIGNUP ── */}
       <section className="bg-[#0A0A12] py-24 px-4">
