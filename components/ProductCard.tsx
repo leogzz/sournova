@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
+import Image from "next/image";
 import { Producto } from "@/data/productos";
 
 interface ProductCardProps { producto: Producto; }
@@ -36,29 +37,40 @@ export default function ProductCard({ producto }: ProductCardProps) {
         </div>
       )}
 
-      {/* Image placeholder */}
+      {/* Product image area */}
       <div
         className="relative w-full aspect-square flex flex-col items-center justify-center overflow-hidden"
         style={{ backgroundColor: producto.color }}
       >
-        {/* Decorative circle */}
-        <div
-          className="absolute w-36 h-36 rounded-full opacity-25"
-          style={{ backgroundColor: producto.accentColor }}
-        />
-        {/* Emoji */}
-        <span className="relative z-10 text-7xl select-none" role="img" aria-label={producto.nombre}>
-          {producto.emoji}
-        </span>
-        {/* Label */}
-        <span
-          className="relative z-10 mt-2 text-xs uppercase tracking-widest opacity-60 px-4 text-center"
-          style={{ color: producto.accentColor, fontFamily: '"Bebas Neue", sans-serif' }}
-        >
-          {producto.nombre}
-        </span>
+        {producto.imagen ? (
+          /* Foto real */
+          <Image
+            src={producto.imagen}
+            alt={producto.nombre}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        ) : (
+          /* Fallback emoji */
+          <>
+            <div
+              className="absolute w-36 h-36 rounded-full opacity-25"
+              style={{ backgroundColor: producto.accentColor }}
+            />
+            <span className="relative z-10 text-7xl select-none" role="img" aria-label={producto.nombre}>
+              {producto.emoji}
+            </span>
+            <span
+              className="relative z-10 mt-2 text-xs uppercase tracking-widest opacity-60 px-4 text-center"
+              style={{ color: producto.accentColor, fontFamily: '"Bebas Neue", sans-serif' }}
+            >
+              {producto.nombre}
+            </span>
+          </>
+        )}
         {/* Hover shimmer */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
       </div>
 
       {/* Card body */}
