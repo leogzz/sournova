@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
-import Image from "next/image";
 import { Producto } from "@/data/productos";
 
 interface ProductCardProps { producto: Producto; }
@@ -37,63 +36,41 @@ export default function ProductCard({ producto }: ProductCardProps) {
         </div>
       )}
 
-      {/* Product image area */}
+      {/* Image placeholder */}
       <div
         className="relative w-full aspect-square flex flex-col items-center justify-center overflow-hidden"
         style={{ backgroundColor: producto.color }}
       >
-        {producto.imagen ? (
-          /* Foto real */
-          <Image
-            src={producto.imagen}
-            alt={producto.nombre}
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
-        ) : (
-          /* Fallback emoji */
-          <>
-            <div
-              className="absolute w-36 h-36 rounded-full opacity-25"
-              style={{ backgroundColor: producto.accentColor }}
-            />
-            <span className="relative z-10 text-7xl select-none" role="img" aria-label={producto.nombre}>
-              {producto.emoji}
-            </span>
-            <span
-              className="relative z-10 mt-2 text-xs uppercase tracking-widest opacity-60 px-4 text-center"
-              style={{ color: producto.accentColor, fontFamily: '"Bebas Neue", sans-serif' }}
-            >
-              {producto.nombre}
-            </span>
-          </>
-        )}
-        {/* Hover shimmer */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+        <div
+          className="absolute w-36 h-36 rounded-full opacity-25"
+          style={{ backgroundColor: producto.accentColor }}
+        />
+        <span className="relative z-10 text-7xl select-none" role="img" aria-label={producto.nombre}>
+          {producto.emoji}
+        </span>
+        <span
+          className="relative z-10 mt-2 text-xs uppercase tracking-widest opacity-60 px-4 text-center"
+          style={{ color: producto.accentColor, fontFamily: '"Bebas Neue", sans-serif' }}
+        >
+          {producto.nombre}
+        </span>
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       {/* Card body */}
       <div className="flex flex-col flex-1 p-4 gap-3">
-        {/* Category pill */}
         <span className="badge-sticker self-start text-xs" style={{ color: badgeColor, borderColor: badgeColor }}>
           {producto.tag}
         </span>
-
-        {/* Name */}
         <h3
           className="text-xl leading-tight text-[#EDE8FF]"
           style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: "0.03em" }}
         >
           {producto.nombre}
         </h3>
-
-        {/* Description */}
         <p className="text-sm text-[#EDE8FF]/55 leading-relaxed flex-1" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
           {producto.descripcion}
         </p>
-
-        {/* Price + CTA */}
         <div className="flex items-center justify-between pt-2 border-t border-white/10">
           <span style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
             <span className="text-2xl text-[#BF44FF]">${producto.precio}</span>

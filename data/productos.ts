@@ -10,7 +10,6 @@ export interface Producto {
   color:       string;
   accentColor: string;
   emoji:       string;
-  imagen?:     string;
   badge?:      string;
 }
 
@@ -133,7 +132,6 @@ export const productos: Producto[] = [
     color:       "#0A0A12",
     accentColor: "#BF44FF",
     emoji:       "🧢",
-    imagen:      "/gorra-negra.jpg",
     badge:       "Nuevo",
   },
   {
@@ -158,7 +156,6 @@ export const productos: Producto[] = [
     color:       "#2D1260",
     accentColor: "#BF44FF",
     emoji:       "🧥",
-    imagen:      "/sudadera.jpg",
     badge:       "Nuevo",
   },
   {
